@@ -1,5 +1,5 @@
-# Physics-coding-project
-# Hello, now we can code!
+# Physics-coding-project (TITLE)
+
 
 1. Description
 2. licenses ect
