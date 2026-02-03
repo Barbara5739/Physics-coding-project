@@ -8,4 +8,4 @@ Tasks:
   2. visulization using matplot lib
   3. magic methods- what are those 
   4. reading data from the file (someone make a dictionary or table that we will write from)-barbara
-  5. new commit
+
