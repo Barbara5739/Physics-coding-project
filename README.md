@@ -1,5 +1,5 @@
-git push "Hello world"
-
 # Physics-coding-project
 # Hello, now we can code!
-print('Hello')
+
+1. Description
+2. licenses ect
