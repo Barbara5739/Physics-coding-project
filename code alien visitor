@@ -1,0 +1,12 @@
+# define class Alien_visitor
+class Alien_visitor:
+
+#define some variables here, initial_position and initial_velocity are both vectors with cartesian coordiantes
+
+#defining relevant functions
+  def__init__(self, name, initial_position, initial_velocity):
+    self.name = self
+    self.initial_position = initial_position
+    self.initial_velocity = initial_velocity
+
+  def alien_orbit(self):
