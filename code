@@ -1,5 +1,4 @@
-
-import matplotlib.pyplot as plt
+mport matplotlib.pyplot as plt
 
 
 Ms = 2.0e30                    # mass of sun in kg unit
@@ -9,20 +8,20 @@ gravconst = G*Ms*Me
 day= 24*3600
 print(gravconst)
 class Sun:
-    def __init__(self, name, mass, x, y):
+    def __init__(self, name, mass=Ms, x=0, y=0):
         self.name = name
         self.mass = mass
         self.x = x
         self.y = y
 
 class Planet:
-    def __init__(self, name, mass,xp, yp, vxp, vyp):
+    def __init__(self, name, mass=Me,xp, yp, vxp, vyp):
         self.name = name
         self.x = xp
         self.y = yp
         self.vx = vxp
         self.vy = vyp
-
+    def  
 class Alien:
     def __init__(self, name, mass, xa, ya, vxa, vya):
         self.x = xa
@@ -38,3 +37,4 @@ class Moon:
         self.y = y
         self.vx = vx
         self.vy = vy
+
