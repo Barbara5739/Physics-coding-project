@@ -56,3 +56,11 @@ class Moon:
         self.vx = vx
         self.vy = vy
 
+###visualization of the planet movement
+fig, ax = plt.subplots(figsize=(10,10))
+ax.set_aspect('equal')
+ax.grid()
+###Sun
+point_s,    = ax.plot([0], [0], marker="o", markersize=7, markeredgecolor="yellow", markerfacecolor="yellow")
+text_s      = ax.text(0,0,'Sun')
+
