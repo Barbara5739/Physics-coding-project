@@ -1,12 +1,13 @@
 import matplotlib.pyplot as plt
+from matplotlib import animation
 
 
-Ms = 2.0e30                    # mass of sun in kg unit
-Me = 5.972e24                  # mass of earth in kg unit        
+
+Ms = 2.0e30   # mass of sun in kg unit
+Me = 5.972e24   # mass of earth in kg unit        
 G = 6.67e-11
-gravconst = G*Ms*Me
 day= 24*3600
-print(gravconst)
+AU = 1.5e11 # earth sun distance
 class Sun:
     def __init__(self, name, mass=Ms, x=0, y=0):
         self.name = name
@@ -16,12 +17,12 @@ class Sun:
 
 class Planet:
     #planet object with name, mass, position in cartesian coordinates and velocity
-    def __init__(self, name, mass=Me, xp=1000, yp=1000, vxp=0, vyp=0):
+    def __init__(self, name, mass=Me, xp=10, yp=0, vxp=0, vyp=0):
         self.name = name
         self.x = xp
         self.y = yp
-        self.vx = vxp
-        self.vy = vyp
+        self.vxp = vxp
+        self.vyp = vyp
     def planet_movement(self, dt): 
         #calculate position and velocity of planet after dt time
         r = ((self.x)**2 + (self.y)**2)**0.5 # radius from sun to planet
@@ -30,16 +31,17 @@ class Planet:
         fxp = (-G*Ms*self.x)/r3
         fyp = (-G*Ms*self.y)/r3
         # update quantities how is this calculated?  F = ma -> a = F/m
-        vxp = vxp + fxp*dt/Me
-        vyp = vyp +fyp*dt/Me
+        self.vxp = self.vxp + fxp*dt/Me
+        self.vyp = self.vyp +fyp*dt/Me
         # update position
-        self.x =self.x + vxp*dt
-        self.y = self.y + vyp*dt 
+        self.x =self.x + self.vxp*dt
+        self.y = self.y + self.vyp*dt 
         # save the position in list
         xelist.append(self.x)
         yelist.append(self.y)
         zelist.append(0)
-print("Planet position after dt time: ", self.x, self.y) 
+       
+"""
 class Alien:
     def __init__(self, name, mass, xa, ya, vxa, vya):
         self.x = xa
@@ -54,7 +56,7 @@ class Moon:
         self.x = x
         self.y = y
         self.vx = vx
-        self.vy = vy
+        self.vy = vy"""
 
 ###visualization of the planet movement
 fig, ax = plt.subplots(figsize=(10,10))
@@ -63,4 +65,7 @@ ax.grid()
 ###Sun
 point_s,    = ax.plot([0], [0], marker="o", markersize=7, markeredgecolor="yellow", markerfacecolor="yellow")
 text_s      = ax.text(0,0,'Sun')
-
+###Planet
+line_p,     = ax.plot([],[],'-g',lw=1,c='blue')
+point_p,    = ax.plot([1], [0], marker="o", markersize=4, markeredgecolor="blue", markerfacecolor="blue")
+text_e      = ax.text(1,0,'Planet')
