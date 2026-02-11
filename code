@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 from matplotlib import animation
 from __future__ import annotations
@@ -19,7 +18,6 @@ AU = 1.5e11 # earth sun distance
         self.x = x
         self.y = y'''
 class galaxy:
-    G = 6.6743*10**-11
     def __init__(self, name, mass, start_x: float = 0, start_y: float = 0):
         self.name = name
         self.mass = mass
@@ -33,7 +31,7 @@ class star(galaxy):
         return self.mass
 
 
-class planet(galaxy):
+class Planet(galaxy):
     def __init__ (self, name, mass, start_x: float = 0, start_y: float = 0, start_x_speed: float = 0, start_y_speed: float = 0):
         super().__init__(name,mass,start_x,start_y)
         self.vx = start_x_speed
@@ -52,8 +50,8 @@ class planet(galaxy):
           self.refrence_mass = star.mass
 
 
-class planet_circular_orbit(planet):
-
+class planet_circular_orbit(Planet):
+### Mathematical fuction for orbit
     def get_location(self, time_interval):
          self.r_constant
          self.time += time_interval
@@ -77,11 +75,12 @@ class planet_circular_orbit(planet):
           self.theta0 = 0
           self.time = 0
 
-class planet_physical_orbit(planet):
+class planet_physical_orbit(Planet):
+    ###Physical function for orbit
     def get_location( self,time_interval ) :
          
-        r = (((self.x-self.refrence_x)**2 + (self.y-self.refrence_y)**2))**0.5
-        Fg = galaxy.G*(self.refrence_mass*self.mass)/r**2
+        r = (((self.x-self.refrence_x)**2 + (self.y-self.refrence_y)**2))**0.5 #distance between the planet and the star
+        Fg = galaxy.G*(self.refrence_mass*self.mass)/r**2 #gravitational force
         
         ax = -Fg * (self.x-self.refrence_x) / r / self.mass
         self.vx = self.vx + ax    * time_interval
@@ -94,33 +93,7 @@ class planet_physical_orbit(planet):
         self.y_positions.append(self.y.real)
         
         return self.x,self.y,self.x_positions,self.y_positions
-    
-'''class Planet:
-    #planet object with name, mass, position in cartesian coordinates and velocity
-    def __init__(self, name, mass=Me, xp=10, yp=0, vxp=0, vyp=0):
-        self.name = name
-        self.x = xp
-        self.y = yp
-        self.vxp = vxp
-        self.vyp = vyp
-    def planet_movement(self, dt): 
-        #calculate position and velocity of planet after dt time
-        r = ((self.x)**2 + (self.y)**2)**0.5 # radius from sun to planet
-        r3 = (self.x**2 + self.y**2)**1.5 # r3- radius cubed thet is used in denominator of gravitational force formula
-        
-        fxp = (-G*Ms*self.x)/r3
-        fyp = (-G*Ms*self.y)/r3
-        # update quantities how is this calculated?  F = ma -> a = F/m
-        self.vxp = self.vxp + fxp*dt/Me
-        self.vyp = self.vyp +fyp*dt/Me
-        # update position
-        self.x =self.x + self.vxp*dt
-        self.y = self.y + self.vyp*dt 
-        # save the position in list
-        xelist.append(self.x)
-        yelist.append(self.y)
-        zelist.append(0)
-       '''
+
 
 class Alien:
     def __init__(self, name, mass, xa, ya, vxa, vya):
