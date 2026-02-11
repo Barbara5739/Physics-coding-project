@@ -59,13 +59,33 @@ class Moon:
         self.vy = vy"""
 
 ###visualization of the planet movement
+
+###Creates the Solar System
 fig, ax = plt.subplots(figsize=(10,10))
 ax.set_aspect('equal')
 ax.grid()
-###Sun
+ax.axis('equal')
+ax.set_xlim(-3*AU,3*AU)
+ax.set_ylim(-3*AU,3*AU)
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.title("Solar System")
+###Sun initial
 point_s,    = ax.plot([0], [0], marker="o", markersize=7, markeredgecolor="yellow", markerfacecolor="yellow")
 text_s      = ax.text(0,0,'Sun')
-###Planet
+###Planet initial
 line_p,     = ax.plot([],[],'-g',lw=1,c='blue')
-point_p,    = ax.plot([1], [0], marker="o", markersize=4, markeredgecolor="blue", markerfacecolor="blue")
-text_e      = ax.text(1,0,'Planet')
+point_p,    = ax.plot([AU], [0], marker="o", markersize=4, markeredgecolor="blue", markerfacecolor="blue")
+text_e      = ax.text(AU,0,'Planet')
+"""
+###Alien initial
+line_a,     = ax.plot([],[],'-g',lw=1)
+point_a,    = ax.plot([1.666*AU], [0], marker="o", markersize=3, markeredgecolor="red", markerfacecolor="red")
+text_a      = ax.text(1.666*AU,0,'Alien')
+###Moon initial
+line_m,     = ax.plot([],[],'-g',lw=1)
+point_m,    = ax.plot([2*AU], [0], marker="o", markersize=2, markeredgecolor="black", markerfacecolor="black")
+text_m      = ax.text(2*AU,0,'Moon')"""
+
+
+plt.show()
