@@ -59,10 +59,10 @@ class planet_circular_orbit(planet):
           self.refrence_y = star.y
           self.refrence_mass = star.mass
           self.r_constant = (((self.x-self.refrence_x)**2 + (self.y-self.refrence_y)**2))**0.5
-        #   self.omega = ((((self.vx)**2 + (self.vy)**2))**0.5) / self.r_constant
-        #   self.theta0 = (np.arctan2(self.y - self.refrence_y, self.x - self.refrence_x))
-          self.omega = 1
-          self.theta0 = 0
+          self.omega = ((((self.vx)**2 + (self.vy)**2))**0.5) / self.r_constant
+          if self.y == 0:
+              self.y = 1
+          self.theta0 = (np.arctan2((self.y - self.refrence_y), (self.x - self.refrence_x)))
           self.time = 0
 
 class planet_physical_orbit(planet):
@@ -82,6 +82,5 @@ class planet_physical_orbit(planet):
         self.y_positions.append(self.y.real)
         
         return self.x,self.y,self.x_positions,self.y_positions
-    
 
 
