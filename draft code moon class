@@ -1,0 +1,26 @@
+import math
+
+# defined random variables for the thing to not give errors, will adjust based on variables from other sections
+r_planet = 1
+phi_planet = 1
+planet_position = (r_planet,phi_planet)
+
+class moon:
+    def __init__(self, name, corresponding_planet, radius, initial_position):
+        self.name = name
+        self.corresponding_planet = corresponding_planet
+        self.radius = radius
+        self.initial_position = initial_position
+
+        self.orbital_period = orbital_period
+
+        self.angular_velocity = (2* math.pi)/ self.orbital_period
+    
+    def set_starting_point():
+        pass
+
+    def update_position(self):
+        return planet_position - self.orbital_radius
+
+    def plot_position(self):
+        #figure this out with data visualization
