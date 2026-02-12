@@ -1,4 +1,4 @@
-import galaxy
+import galaxy as galaxy
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -16,17 +16,26 @@ time_stop = endtime * ( 24*60*60)
 stars = []
 planets = []
 
-# !!!!!! example star and planets used for testing and show functionallity, must be removed for final product!!!!!
 
-sun = galaxy.star("sun", 1.9884*10**30, 0, 0) 
+
+# !!!!!! example star, planets and alien used for testing and show functionallity, must be removed for final product!!!!!
+
+sun = galaxy.Star("sun", 1.9884*10**30, 0, 0) 
 stars.append(sun)
 
-planet_1 = galaxy.planet_physical_orbit("earth", 5.972*10**24, 1.496*10**11, 0, 0, 29750 )
-planet_1.set_refrence_star(sun)
+# planet_1 = galaxy.Planet_manager.create_planet_physical_orbit(name, Star, mass, start_x, start_y, start_x_speed, start_y_speed)
+planet_1 = galaxy.Planet_manager.create_planet_physical_orbit("earth", sun, 5.972*10**24, 1.496*10**11, 0, 0, 29750)
 planets.append(planet_1)
-planet_2 = galaxy.planet_circular_orbit("zamboria", 5.972*10**24, 1.496*10**11, 0, 0, 15000 )
-planet_2.set_refrence_star(sun)
+
+# planet_2 = galaxy.Planet_manager.create_planet_circular_orbit(name, Star, mass, start_x, start_y,)
+planet_2 = galaxy.Planet_manager.create_planet_circular_orbit("zamboria", sun, 5.972*10**24, 1.496*10**11, 0)
 planets.append(planet_2)
+
+# alien = galaxy.Alien(name, Star, mass, start_x, start_y, start_x_speed, start_y_speed)
+alien = galaxy.Alien( "rick", sun, 1, 1, 1, 1, 1)
+planets.append(alien)
+
+
 
 #!!remove till here 
 
@@ -61,14 +70,14 @@ print(df)
 
 for Planet in planets:
     # print(planet.results())
-    plt.legend 
-    plt.plot(Planet.x_positions, Planet.y_positions, marker='.')    
+    plt.plot(Planet.x_positions, Planet.y_positions, marker='.', label=Planet.name)    
     plt.xlabel("x")       
     plt.ylabel("y")
     plt.title("Baan in het x-y vlak")       
     plt.axis("equal")           # gelijke schaal (belangrijk!)
     plt.grid(True)
 
+plt.legend(loc="upper left")
 plt.show()
 
 #!!remove till here
