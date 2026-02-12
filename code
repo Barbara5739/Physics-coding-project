@@ -1,6 +1,6 @@
+from __future__ import annotations
 import matplotlib.pyplot as plt
 from matplotlib import animation
-from __future__ import annotations
 import numpy as np
 import math as math
 from abc import ABC, abstractmethod
@@ -17,23 +17,28 @@ AU = 1.5e11 # earth sun distance
         self.mass = mass
         self.x = x
         self.y = y'''
-class galaxy:
+
+class Galaxy:
+    G = 6.6743*10**-11
     def __init__(self, name, mass, start_x: float = 0, start_y: float = 0):
         self.name = name
         self.mass = mass
         self.x = start_x
         self.y = start_y
         
-class star(galaxy):
+class Star(Galaxy):
     def get_location(self):
         return self.x, self.y
     def get_mass(self):
         return self.mass
 
 
-class Planet(galaxy):
-    def __init__ (self, name, mass, start_x: float = 0, start_y: float = 0, start_x_speed: float = 0, start_y_speed: float = 0):
-        super().__init__(name,mass,start_x,start_y)
+class Planet(Galaxy): 
+    def __init__ (self, name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
+        super().__init__(name, mass,start_x,start_y)
+        self.refrence_x = Star.x
+        self.refrence_y = Star.y
+        self.refrence_mass = Star.mass
         self.vx = start_x_speed
         self.vy = start_y_speed
         self.x_positions = []
@@ -44,43 +49,19 @@ class Planet(galaxy):
         pass
     
      
-    def set_refrence_star(self, star: star):
-          self.refrence_x = star.x
-          self.refrence_y = star.y
-          self.refrence_mass = star.mass
+    def set_refrence_Star(self, Star: Star):
+          self.refrence_x = Star.x
+          self.refrence_y = Star.y
+          self.refrence_mass = Star.mass
 
 
-class planet_circular_orbit(Planet):
-### Mathematical fuction for orbit
-    def get_location(self, time_interval):
-         self.r_constant
-         self.time += time_interval
-         theta = self.theta0 + self.omega * self.time
-         self.x = self.refrence_x + self.r_constant * np.cos(theta)
-         self.y = self.refrence_y + self.r_constant * np.sin(theta)
+  
 
-         self.x_positions.append(self.x.real)
-         self.y_positions.append(self.y.real)
-
-         return self.x,self.y,self.x_positions,self.y_positions
-        
-    def set_refrence_star(self, star: star):
-          self.refrence_x = star.x
-          self.refrence_y = star.y
-          self.refrence_mass = star.mass
-          self.r_constant = (((self.x-self.refrence_x)**2 + (self.y-self.refrence_y)**2))**0.5
-        #   self.omega = ((((self.vx)**2 + (self.vy)**2))**0.5) / self.r_constant
-        #   self.theta0 = (np.arctan2(self.y - self.refrence_y, self.x - self.refrence_x))
-          self.omega = 1
-          self.theta0 = 0
-          self.time = 0
-
-class planet_physical_orbit(Planet):
-    ###Physical function for orbit
+class Planet_physical_orbit(Planet):
     def get_location( self,time_interval ) :
-         
+        ###Physical function for orbit
         r = (((self.x-self.refrence_x)**2 + (self.y-self.refrence_y)**2))**0.5 #distance between the planet and the star
-        Fg = galaxy.G*(self.refrence_mass*self.mass)/r**2 #gravitational force
+        Fg = Galaxy.G*(self.refrence_mass*self.mass)/r**2 #gravitational force
         
         ax = -Fg * (self.x-self.refrence_x) / r / self.mass
         self.vx = self.vx + ax    * time_interval
@@ -93,23 +74,59 @@ class planet_physical_orbit(Planet):
         self.y_positions.append(self.y.real)
         
         return self.x,self.y,self.x_positions,self.y_positions
-
-
-class Alien:
-    def __init__(self, name, mass, xa, ya, vxa, vya):
-        self.x = xa
-        self.y = ya
-        self.vx = vxa
-        self.vy = vya
-        self.name = name
     
-class Moon:
-    def __init__(self, mass, x, y, vx, vy):
-        self.mass = mass
-        self.x = x
-        self.y = y
-        self.vx = vx
-        self.vy = vy
+
+
+class Planet_manager:
+    @staticmethod
+    def create_planet_circular_orbit( name, Star: Star, mass, start_x: float, start_y: float, d =9):
+          ### Mathematical fuction for orbit
+          reference_y = start_y
+          if reference_y == 0:
+              reference_y = 1
+         
+          r_constant = (((start_x - Star.x)**2 + (start_y -Star.y)**2))**0.5 #distance between the planet and the star
+
+          vx, vy = Planet_manager.get_needed_speed( r_constant, start_x, start_y, Star.mass, Star.x, reference_y)
+          Planet = Planet_manager.create_planet_physical_orbit(name, Star, mass, start_x, start_y, vx, vy)
+          return Planet
+    
+    @staticmethod
+    def create_planet_physical_orbit ( name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
+         Planet = Planet_physical_orbit(name, Star, mass, start_x, start_y, start_x_speed , start_y_speed)
+         Planet.set_refrence_Star(Star)
+         return Planet
+
+    @staticmethod
+    def get_needed_speed( radius, x , y, reference_mass, reference_x, reference_y):
+        
+        omega = math.sqrt((Galaxy.G * reference_mass)/radius**3)
+        vt = radius * omega
+        theta = np.degrees(np.arctan2((y - reference_y), (x - reference_x)))
+        vx = np.sin(theta) * vt
+        vy = np.cos(theta)* vt
+        return vx, vy
+
+
+class Alien(Planet):
+    # def __init__(self, Star: Star, name, mass, xa, ya, vxa, vya):
+        # self.x = xa
+        # self.y = ya
+        # self.vx = vxa
+        # self.vy = vya
+        # self.name = name
+      def get_location(self, time_interval): 
+
+    
+class Moon(Planet):
+    # def __init__(self, Planet: Planet, mass, x, y, vx, vy):
+        # self.mass = mass
+        # self.x = x
+        # self.y = y
+        # self.vx = vx
+        # self.vy = vy
+      def get_location(self, time_interval):
+          return super().get_location(time_interval)
 
 ###visualization of the planet movement
 
