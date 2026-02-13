@@ -16,8 +16,9 @@ class moon:
 
         self.angular_velocity = (2* math.pi)/ self.orbital_period
     
-    def set_starting_point():
-        pass
+    def set_starting_point(self): #check math on this
+        x_moon_starting_point = x_planet - self.radius_x
+        y_moon_starting_point = y_planet - self.radius_y
 
     def update_position(self):
         return planet_position - self.orbital_radius
