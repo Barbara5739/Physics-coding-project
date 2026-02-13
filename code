@@ -130,6 +130,7 @@ class Moon(Planet):
 
 ###visualization of the planet movement
 
+### the underneath should be done in the controll_desk
 ###Creates the Solar System
 fig, ax = plt.subplots(figsize=(10,10))
 ax.set_aspect('equal')
