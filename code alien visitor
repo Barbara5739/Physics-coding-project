@@ -26,6 +26,9 @@ class Alien_visitor:
         initial_angle = [2, 1] #update this when we figure out how to read in data
         true_anomaly = np.angle(initial_angle)
 
+    def calculate_initial_distance (self):
+        return math.sqrt((x_sun-self.initial_position_x) **2 + (y_sun -self.initial_position_y)** 2)
+
     def set_initial_velocity(self):
         x = self.initial_velocity_x * math.cos(self.true_anomaly)
         y = self.initial_velocity_y * math.sin(self.true_anomaly)
