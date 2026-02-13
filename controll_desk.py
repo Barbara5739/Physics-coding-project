@@ -32,8 +32,8 @@ planet_2 = galaxy.Planet_manager.create_planet_circular_orbit("zamboria", sun, 5
 planets.append(planet_2)
 
 # alien = galaxy.Alien(name, Star, mass, start_x, start_y, start_x_speed, start_y_speed)
-alien = galaxy.Alien( "rick", sun, 1, 1, 1, 1, 1)
-planets.append(alien)
+# alien = galaxy.Alien( "rick", sun, 1, 1, 1, 1, 1)
+# planets.append(alien)
 
 
 
@@ -81,3 +81,4 @@ plt.legend(loc="upper left")
 plt.show()
 
 #!!remove till here
+
