@@ -124,8 +124,11 @@ class Moon(Planet):
           return super().get_location(time_interval)
 
 ###visualization of the planet movement
+sun = Star("Sun", Ms, sx, sy)
+sx==0
+sy==0
+planet = Planet("Earth", sun, Me, AU, 0)
 
-### the underneath should be done in the controll_desk
 ###Creates the Solar System
 fig, ax = plt.subplots(figsize=(10,10))
 ax.set_aspect('equal')
@@ -137,8 +140,8 @@ plt.xlabel("X")
 plt.ylabel("Y")
 plt.title("Solar System")
 ###Sun initial
-point_s,    = ax.plot([0], [0], marker="o", markersize=7, markeredgecolor="yellow", markerfacecolor="yellow")
-text_s      = ax.text(0,0,'Sun')
+point_s,    = ax.plot([sx], [sy], marker="o", markersize=7, markeredgecolor="yellow", markerfacecolor="yellow")
+text_s      = ax.text(sx,sy,'Sun')
 ###Planet initial
 line_p,     = ax.plot([],[],'-g',lw=1,c='blue')
 point_p,    = ax.plot([AU], [0], marker="o", markersize=4, markeredgecolor="blue", markerfacecolor="blue")
@@ -153,5 +156,28 @@ line_m,     = ax.plot([],[],'-g',lw=1)
 point_m,    = ax.plot([2*AU], [0], marker="o", markersize=2, markeredgecolor="black", markerfacecolor="black")
 text_m      = ax.text(2*AU,0,'Moon')"""
 
+sxdata,sydata = [],[]                   # sun track
+pxdata,pydata = [],[]                   # earth track
+'''axdata,aydata = [],[]                   # alien track
+   mxdata,mydata = [],[]            #moon track'''
+#Animation:
+def animate(i):
+    time_interval = day  # time interval in seconds
+    # Sun position update
+    sx, sy = sun.get_location()
+    sxdata.append(sx)
+    sydata.append(sy)
+    point_s.set_data(sx, sy)
+    text_s.set_position((sx, sy))
+    
+    # Planet position update
+    px, py, x_positions, y_positions = planet.get_location(time_interval)
+    point_p.set_data(px, py)
+    text_e.set_position((px, py))
+    line_p.set_data(x_positions, y_positions)
+    
+  
+
+anim = animation.FuncAnimation(fig,func=animate,frames=len(pxdata),interval=1,blit=True)           
 
 plt.show()
