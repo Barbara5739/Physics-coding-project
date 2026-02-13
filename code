@@ -29,13 +29,13 @@ class Star(Galaxy):
 
 
 class Planet(Galaxy): 
-    def __init__ (self, name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
-        super().__init__(name, mass,start_x,start_y)
+    def __init__ (self, name, Star: Star, mass, px: float, py: float, start_xp_speed: float = 0, start_yp_speed: float = 0  ):
+        super().__init__(name, mass, px, py)
         self.refrence_x = Star.x
         self.refrence_y = Star.y
         self.refrence_mass = Star.mass
-        self.vx = start_x_speed
-        self.vy = start_y_speed
+        self.vx = start_xp_speed
+        self.vy = start_yp_speed
         self.x_positions = []
         self.y_positions = []
 
@@ -50,10 +50,8 @@ class Planet(Galaxy):
           self.refrence_mass = Star.mass
 
 
-  
-
 class Planet_physical_orbit(Planet):
-    def get_location( self,time_interval ) :
+    def get_location(self, time_interval) :
         ###Physical function for orbit
         r = (((self.x-self.refrence_x)**2 + (self.y-self.refrence_y)**2))**0.5 #distance between the planet and the star
         Fg = Galaxy.G*(self.refrence_mass*self.mass)/r**2 #gravitational force
@@ -68,13 +66,13 @@ class Planet_physical_orbit(Planet):
         self.y = self.y + self.vy * time_interval
         self.y_positions.append(self.y.real)
         
+
         return self.x,self.y,self.x_positions,self.y_positions
+        
     
-
-
 class Planet_manager:
     @staticmethod
-    def create_planet_circular_orbit( name, Star: Star, mass, start_x: float, start_y: float, d =9):
+    def create_planet_circular_orbit(name, Star: Star, mass, start_x: float, start_y: float, d =9):
           ### Mathematical fuction for orbit
           reference_y = start_y
           if reference_y == 0:
@@ -102,7 +100,6 @@ class Planet_manager:
         vy = np.cos(theta)* vt
         return vx, vy
 
-
 class Alien(Planet):
     # def __init__(self, Star: Star, name, mass, xa, ya, vxa, vya):
         # self.x = xa
@@ -124,10 +121,14 @@ class Moon(Planet):
           return super().get_location(time_interval)
 
 ###visualization of the planet movement
+
+sx=0
+sy=0
 sun = Star("Sun", Ms, sx, sy)
-sx==0
-sy==0
-planet = Planet("Earth", sun, Me, AU, 0)
+
+px=AU
+py=0
+planet = Planet_manager.create_planet_physical_orbit("Earth", Star =sun, mass=Me, px, py, start_xp_speed=0, start_yp_speed=1000)
 
 ###Creates the Solar System
 fig, ax = plt.subplots(figsize=(10,10))
@@ -139,22 +140,21 @@ ax.set_ylim(-3*AU,3*AU)
 plt.xlabel("X")
 plt.ylabel("Y")
 plt.title("Solar System")
-###Sun initial
-point_s,    = ax.plot([sx], [sy], marker="o", markersize=7, markeredgecolor="yellow", markerfacecolor="yellow")
-text_s      = ax.text(sx,sy,'Sun')
-###Planet initial
-line_p,     = ax.plot([],[],'-g',lw=1,c='blue')
-point_p,    = ax.plot([AU], [0], marker="o", markersize=4, markeredgecolor="blue", markerfacecolor="blue")
-text_e      = ax.text(AU,0,'Planet')
-"""
-###Alien initial
-line_a,     = ax.plot([],[],'-g',lw=1)
-point_a,    = ax.plot([1.666*AU], [0], marker="o", markersize=3, markeredgecolor="red", markerfacecolor="red")
-text_a      = ax.text(1.666*AU,0,'Alien')
-###Moon initial
-line_m,     = ax.plot([],[],'-g',lw=1)
-point_m,    = ax.plot([2*AU], [0], marker="o", markersize=2, markeredgecolor="black", markerfacecolor="black")
-text_m      = ax.text(2*AU,0,'Moon')"""
+
+#initial of the objects
+
+text_s   = ax.text(sx, sy, "Sun")
+point_s, = ax.plot([sx], [sy], marker="o", markersize=7, color="yellow")
+
+line_p,  = ax.plot([], [], lw=1, color='blue')
+point_p, = ax.plot([px], [py], marker="o", markersize=4, color="blue")
+text_p   = ax.text(px, py, "Planet")
+
+def init():
+    line_p.set_data([], [])
+    point_p.set_data([], [])
+    return line_p, point_p, point_s, text_p, text_s
+
 
 sxdata,sydata = [],[]                   # sun track
 pxdata,pydata = [],[]                   # earth track
@@ -162,22 +162,22 @@ pxdata,pydata = [],[]                   # earth track
    mxdata,mydata = [],[]            #moon track'''
 #Animation:
 def animate(i):
-    time_interval = day  # time interval in seconds
-    # Sun position update
+    dt = day  # seconds per step
+
+    # Sun stays fixed
     sx, sy = sun.get_location()
-    sxdata.append(sx)
-    sydata.append(sy)
-    point_s.set_data(sx, sy)
+    point_s.set_data([sx], [sy])
     text_s.set_position((sx, sy))
-    
-    # Planet position update
-    px, py, x_positions, y_positions = planet.get_location(time_interval)
-    point_p.set_data(px, py)
-    text_e.set_position((px, py))
+
+    # Update planet physics by one step
+    x, y, x_positions, y_positions = planet.get_location(dt)
+
+    # Draw trajectory + current point
     line_p.set_data(x_positions, y_positions)
-    
-  
+    point_p.set_data([x], [y])
+    text_p.set_position((x, y))
 
-anim = animation.FuncAnimation(fig,func=animate,frames=len(pxdata),interval=1,blit=True)           
+    return line_p, point_p, point_s, text_p, text_s
 
+anim = animation.FuncAnimation( fig, animate, init_func=init, frames=2000, interval=20, blit=True)
 plt.show()
