@@ -128,7 +128,7 @@ sun = Star("Sun", Ms, sx, sy)
 
 px=AU
 py=0
-planet = Planet_manager.create_planet_physical_orbit("Earth", Star =sun, mass=Me, px, py, start_xp_speed=0, start_yp_speed=1000)
+planet = Planet_manager.create_planet_circular_orbit("Earth", sun, Me, px, py)
 
 ###Creates the Solar System
 fig, ax = plt.subplots(figsize=(10,10))
@@ -158,26 +158,28 @@ def init():
 
 sxdata,sydata = [],[]                   # sun track
 pxdata,pydata = [],[]                   # earth track
-'''axdata,aydata = [],[]                   # alien track
-   mxdata,mydata = [],[]            #moon track'''
-#Animation:
+'''axdata,aydata = [],[]                # alien track
+   mxdata,mydata = [],[]                #moon track'''
+
+
+#Animation
 def animate(i):
     dt = day  # seconds per step
 
-    # Sun stays fixed
-    sx, sy = sun.get_location()
-    point_s.set_data([sx], [sy])
-    text_s.set_position((sx, sy))
+    # Update planet physics
+    x, y = planet.get_location(time_interval)
 
-    # Update planet physics by one step
-    x, y, x_positions, y_positions = planet.get_location(dt)
 
-    # Draw trajectory + current point
-    line_p.set_data(x_positions, y_positions)
-    point_p.set_data([x], [y])
-    text_p.set_position((x, y))
+    # Update line (orbit trail)
+    line_p.set_data(xp_position, yp_position)
+
+    # Update planet point
+    point_p.set_data(xp_positions[i], yp_positions[i])
+    text_p.set_position(xp_positions[i], yp_positions[i])
 
     return line_p, point_p, point_s, text_p, text_s
-
 anim = animation.FuncAnimation( fig, animate, init_func=init, frames=2000, interval=20, blit=True)
+    
+
+
 plt.show()
