@@ -11,12 +11,7 @@ Me = 5.972e24   # mass of earth in kg unit
 G = 6.67e-11
 day= 24*3600
 AU = 1.5e11 # earth sun distance
-'''class Sun:
-    def __init__(self, name, mass=Ms, x=0, y=0):
-        self.name = name
-        self.mass = mass
-        self.x = x
-        self.y = y'''
+
 
 class Galaxy:
     G = 6.6743*10**-11
