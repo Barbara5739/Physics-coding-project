@@ -2,3 +2,30 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 
+G = 6.67e-11
+Ms = 2.0e30   # mass of sun in kg unit
+position_sun = (0 , 0)
+
+
+class alien_visitor():
+  def __init__(self, name, reference_star, mass, x_initial, y_initial, perihelion_distance, orbital_eccentricity):
+      self.name = name
+      self.reference_star = reference_star
+      self.mass = mass
+      self.x_initial = x_initial
+      self.perihelion_distance = perihelion_distance
+      self.orbital_eccentricity = orbital_eccentricity
+
+#this is unfinished
+  def alien_visitor_orbit(self):
+    a = []
+    b = []
+    for x in range(-50, 50, 1):
+      y = self.orbital_eccentricity*x**2 - self.perihelion_distance
+      a.append(x)
+      b.append(y)
+
+  
+  
+
+  
