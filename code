@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 import numpy as np
 import math as math
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod 
 
 
 Ms = 2.0e30   # mass of sun in kg unit
@@ -13,15 +13,15 @@ day= 24*3600
 AU = 1.5e11 # earth sun distance
 
 
-class Galaxy:
-    G = 6.6743*10**-11
-    def __init__(self, name, mass, start_x: float = 0, start_y: float = 0):
+class Galaxy:             # The upper most class of the galaxy system
+    G = 6.6743*10**-11    # G is the universal gravitation constant that will be used througout the simulation, since this number is equal everywhere in the universe / galaxy, it belongs to this class.
+    def __init__(self, name, mass, start_x: float = 0, start_y: float = 0):    # these are propperties that every object "spawned" inside our galaxy has, therefore they are already defined in the galaxy class to avoid repetition of code
         self.name = name
         self.mass = mass
         self.x = start_x
         self.y = start_y
         
-class Star(Galaxy):
+class Star(Galaxy):        # returns the value's of the star(s) in the galaxy system to use in plots
     def get_location(self):
         return self.x, self.y
     def get_mass(self):
