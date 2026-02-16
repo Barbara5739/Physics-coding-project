@@ -25,11 +25,14 @@ sun = galaxy.Star("sun", 1.9884*10**30, 0, 0)
 stars.append(sun)
 
 # planet_1 = galaxy.Planet_manager.create_planet_physical_orbit(name, Star, mass, start_x, start_y, start_x_speed, start_y_speed) <- how the inputs should be organised for class planet_physical_orbit
-planet_1 = galaxy.Planet_manager.create_planet_physical_orbit("earth", sun, 5.972*10**24, 1.496*10**11, 0, 0, 29750)
+planet_1 = galaxy.Object_manager.create_planet_physical_orbit("earth", sun, 5.972*10**24, 1.496*10**11, 0, 0, 29750)
 planets.append(planet_1)
 
+print(planet_1)	# check the __str__ method				   
+			   
+
 # planet_2 = galaxy.Planet_manager.create_planet_circular_orbit(name, Star, mass, start_x, start_y,) <- how the inputs should be organised for class planet_circular_orbit
-planet_2 = galaxy.Planet_manager.create_planet_circular_orbit("zamboria", sun, 5.972*10**24, 1.496*10**11, 0)
+planet_2 = galaxy.Object_manager.create_planet_circular_orbit("zamboria", sun, 5.972*10**24, 1.496*10**11, 0)
 planets.append(planet_2)
 
 # alien = galaxy.Alien(name, Star, mass, start_x, start_y, start_x_speed, start_y_speed) <- how the inputs should be organised for class aliens
@@ -52,12 +55,16 @@ while time < time_stop: # here, the system checks if we have reached the day tha
 
 # creating pandas data frame with al the location results from al the planets
 
+												  
 rows = []
 for planet in planets:
+
     row = { "name": planet.name }
+
     for time, (x, y) in enumerate(zip(planet.x_positions, planet.y_positions), start=1):
         row[f"x_position_at_time={time}"] = x
         row[f"y_position_at_time={time}"] = y
+
     rows.append(row)
 
 df = pd.DataFrame(rows)
@@ -81,5 +88,4 @@ plt.legend(loc="upper left")
 plt.show()
 
 #!!remove till here
-
 
