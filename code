@@ -11,96 +11,112 @@ Me = 5.972e24   # mass of earth in kg unit
 G = 6.67e-11
 day= 24*3600
 AU = 1.5e11 # earth sun distance
-
-
 class Galaxy:             # The upper most class of the galaxy system
     G = 6.6743*10**-11    # G is the universal gravitation constant that will be used througout the simulation, since this number is equal everywhere in the universe / galaxy, it belongs to this class.
     def __init__(self, name, mass, start_x: float = 0, start_y: float = 0):    # these are propperties that every object "spawned" inside our galaxy has, therefore they are already defined in the galaxy class to avoid repetition of code
+        # super init
         self.name = name
         self.mass = mass
         self.x = start_x
         self.y = start_y
         
 class Star(Galaxy):        # returns the value's of the star(s) in the galaxy system to use in plots
+    #  Star class, static object in the galaxy like the sun
     def get_location(self):
+        # get star's location
         return self.x, self.y
     def get_mass(self):
+        # get star's mass
         return self.mass
 
 
-class Planet(Galaxy): 
-    def __init__ (self, name, Star: Star, mass, px: float, py: float, start_xp_speed: float = 0, start_yp_speed: float = 0  ):
-        super().__init__(name, mass, px, py)
-        self.refrence_x = Star.x
-        self.refrence_y = Star.y
-        self.refrence_mass = Star.mass
-        self.vx = start_xp_speed
-        self.vy = start_yp_speed
+class Moving_Object(Galaxy): # Class for moving objects in the galaxy like planets, komets, ufo's etc
+    def __init__ (self, name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
+        super().__init__(name, mass,start_x,start_y)
+        #  set moving object own attributes
+        self.reference_x, self.reference_y = Star.get_location()
+        self.reference_mass = Star.get_mass()
+        self.reference_name = Star.name
+        self.vx = start_x_speed
+        self.vy = start_y_speed
         self.x_positions = []
         self.y_positions = []
 
+    def __str__(self) -> str:
+        #  printable definition of the moving object
+        return f"Planet: {self.name} mass: {self.mass} orbiting around {self.reference_name}"
+    
+
     @abstractmethod
     def get_location(self, time_interval):
+        # get current location of the planet. Redefine in the subclass
         pass
     
      
-    def set_refrence_Star(self, Star: Star):
-          self.refrence_x = Star.x
-          self.refrence_y = Star.y
-          self.refrence_mass = Star.mass
+    def set_reference_Star(self, Star: Star):
+        #   set data of reference star, this is the star around which the planets circulate
+          self.reference_x, self.reference_y = Star.get_location( )
+          self.reference_mass = Star.get_mass()
 
 
-class Planet_physical_orbit(Planet):
+  
+
+class Planet_physical_orbit(Moving_Object):
     def get_location(self, time_interval) :
         ###Physical function for orbit
-        r = (((self.x-self.refrence_x)**2 + (self.y-self.refrence_y)**2))**0.5 #distance between the planet and the star
-        Fg = Galaxy.G*(self.refrence_mass*self.mass)/r**2 #gravitational force
+        r = (((self.x-self.reference_x)**2 + (self.y-self.reference_y)**2))**0.5 #distance between the planet and the star
+        Fg = Galaxy.G*(self.reference_mass*self.mass)/r**2 #gravitational force
         
-        ax = -Fg * (self.x-self.refrence_x) / r / self.mass
+        # Calculate the current x position in time
+        ax = -Fg * (self.x-self.reference_x) / r / self.mass
         self.vx = self.vx + ax    * time_interval
         self.x = self.x + self.vx * time_interval
+        # Store the x postion in a list
         self.x_positions.append(self.x.real)
 
-        ay = -Fg * (self.y-self.refrence_y) / r / self.mass
+        # Calculate the current y position in time
+        ay = -Fg * (self.y-self.reference_y) / r / self.mass
         self.vy = self.vy + ay    * time_interval 
         self.y = self.y + self.vy * time_interval
+         # Store the y postion in a list
         self.y_positions.append(self.y.real)
         
-
         return self.x,self.y,self.x_positions,self.y_positions
-        
     
-class Planet_manager:
+
+
+class Object_manager:
+    # Class to instantiate the moving objects. 
     @staticmethod
     def create_planet_circular_orbit(name, Star: Star, mass, start_x: float, start_y: float, d =9):
           ### Mathematical fuction for orbit
-          reference_y = start_y
-          if reference_y == 0:
-              reference_y = 1
-         
+                
           r_constant = (((start_x - Star.x)**2 + (start_y -Star.y)**2))**0.5 #distance between the planet and the star
-
-          vx, vy = Planet_manager.get_needed_speed( r_constant, start_x, start_y, Star.mass, Star.x, reference_y)
-          Planet = Planet_manager.create_planet_physical_orbit(name, Star, mass, start_x, start_y, vx, vy)
+          #get needed speed to achieve circular orbit with pyshics calculation
+          vx, vy = Object_manager.get_needed_speed( r_constant, start_x, start_y, Star.mass, Star.x, Star.y) 
+          # Create Physical planet for the asked distance to the star
+          Planet = Object_manager.create_planet_physical_orbit(name, Star, mass, start_x, start_y, vx, vy)
           return Planet
     
     @staticmethod
     def create_planet_physical_orbit ( name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
+         # create Physics calculated orbit by speed mass planet, mass star and G force 
          Planet = Planet_physical_orbit(name, Star, mass, start_x, start_y, start_x_speed , start_y_speed)
-         Planet.set_refrence_Star(Star)
+         Planet.set_reference_Star(Star) # set star around which the planet makes it orbit
          return Planet
 
     @staticmethod
     def get_needed_speed( radius, x , y, reference_mass, reference_x, reference_y):
-        
-        omega = math.sqrt((Galaxy.G * reference_mass)/radius**3)
-        vt = radius * omega
-        theta = np.degrees(np.arctan2((y - reference_y), (x - reference_x)))
-        vx = np.sin(theta) * vt
-        vy = np.cos(theta)* vt
+        # Calculate speed for needed radius
+        omega = math.sqrt((Galaxy.G * reference_mass)/radius**3) #calculate angular velocity
+        vt = radius * omega #linear tangential velocity
+        theta = np.degrees(np.arctan2((y - reference_y), (x - reference_x))) # signed angle 
+        vx = np.sin(theta) * vt   # Get x speed
+        vy = np.cos(theta)* vt    # Get y speed
         return vx, vy
 
-class Alien(Planet):
+
+class Alien(Moving_Object):
     # def __init__(self, Star: Star, name, mass, xa, ya, vxa, vya):
         # self.x = xa
         # self.y = ya
@@ -108,9 +124,9 @@ class Alien(Planet):
         # self.vy = vya
         # self.name = name
       def get_location(self, time_interval): 
-
+        pass
     
-class Moon(Planet):
+class Moon(Moving_Object):
     # def __init__(self, Planet: Planet, mass, x, y, vx, vy):
         # self.mass = mass
         # self.x = x
@@ -128,7 +144,7 @@ sun = Star("Sun", Ms, sx, sy)
 
 px=AU
 py=0
-planet = Planet_manager.create_planet_circular_orbit("Earth", sun, Me, px, py)
+planet = Object_manager.create_planet_circular_orbit("Earth", sun, Me, px, py)
 
 ###Creates the Solar System
 fig, ax = plt.subplots(figsize=(10,10))
@@ -140,6 +156,22 @@ ax.set_ylim(-3*AU,3*AU)
 plt.xlabel("X")
 plt.ylabel("Y")
 plt.title("Solar System")
+              
+                                                                                                             
+                                
+                 
+                                               
+                                                                                                          
+                                    
+   
+                
+                                      
+                                                                                                              
+                                         
+               
+                                      
+                                                                                                              
+                                       
 
 #initial of the objects
 
