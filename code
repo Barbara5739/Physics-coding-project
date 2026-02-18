@@ -11,6 +11,7 @@ Me = 5.972e24   # mass of earth in kg unit
 G = 6.67e-11
 day= 24*3600
 AU = 1.5e11 # earth sun distance
+
 class Galaxy:             # The upper most class of the galaxy system
     G = 6.6743*10**-11    # G is the universal gravitation constant that will be used througout the simulation, since this number is equal everywhere in the universe / galaxy, it belongs to this class.
     def __init__(self, name, mass, start_x: float = 0, start_y: float = 0):    # these are propperties that every object "spawned" inside our galaxy has, therefore they are already defined in the galaxy class to avoid repetition of code
@@ -28,7 +29,6 @@ class Star(Galaxy):        # returns the value's of the star(s) in the galaxy sy
     def get_mass(self):
         # get star's mass
         return self.mass
-
 
 class Moving_Object(Galaxy): # Class for moving objects in the galaxy like planets, komets, ufo's etc
     def __init__ (self, name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
@@ -136,24 +136,24 @@ class Moon(Moving_Object):
       def get_location(self, time_interval):
           return super().get_location(time_interval)
 
+
 ###visualization of the planet movement
-#Sun
+#Sun initial
 sx=0
 sy=0
 sun = Star("Sun", Ms, sx, sy)
-#Planet
+#Planet initial
 px=AU
 py=0
 planet = Planet_physical_orbit("Earth", sun, Me, px, py, 0, 1000)
-#Alien
+#Alien initial
 ax=3*AU
 ay=0
 alien = Alien("Alien", sun, 1000, ax, ay, 0, 2000)
-#Moon
+#Moon initial
 '''mx=get_location(Planet_physical_orbit)
 my=
 moon = Moon("Moon", planet, 1000, mx, my, 0, 3000)'''
-
 
 ###Creates the Solar System
 fig, ax = plt.subplots(figsize=(10,10))
@@ -192,8 +192,8 @@ def init():
     return line_p, point_p, line_a, point_a, line_m, point_m, point_s, text_p, text_a, text_m
 
 
-sxdata,sydata = [],[]                   # sun track
-pxdata,pydata = [Planet.x_positions],[Planet.y_positions]                   # earth track
+sxdata,sydata = [Moving_Object.x_positions[0]],[Moving_Object.y_positions[0]]                   # sun track
+pxdata,pydata = [Planet_physical_orbit.x_positions],[Planet_physical_orbit.y_positions]                   # earth track
 axdata,aydata = [],[]                # alien track
 mxdata,mydata = [],[]                #moon track
 
@@ -202,18 +202,16 @@ mxdata,mydata = [],[]                #moon track
 def animate(i):
     dt = day  # seconds per step
 
-    # Update planet physics
-    x, y = planet.get_location(time_interval)
-
-
     # Update line (orbit trail)
-    line_p.set_data(x_positions, y_positions)
+    line_p.set_data(Moving_Object.x_positions, Moving_Object.y_positions)
 
     # Update planet point
-    point_p.set_data(x_positions[i], y_positions[i])
-    text_p.set_position(x_positions[i], y_positions[i])
+    point_p.set_data(Moving_Object.x_positions[i], Moving_Object.y_positions[i])
+    text_p.set_position(Moving_Object.x_positions[i], Moving_Object.y_positions[i])
 
     return line_p, point_p, point_s, text_p, text_s
 anim = animation.FuncAnimation( fig, animate, init_func=init, frames=2000, interval=20, blit=True)
+    
+
 
 plt.show()
