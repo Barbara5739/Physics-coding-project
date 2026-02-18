@@ -151,7 +151,7 @@ xa=3*AU
 ya=0
 alien = Alien("Alien", sun, 1000, xa, ya, 0, 2000)
 #Moon initial
-mx=AU + 384400000
+mx=2*AU
 my=0
 moon = Moon("Moon", planet, 1000, mx, my, 0)
 
@@ -162,8 +162,8 @@ fig, ax = plt.subplots(figsize=(10,10))
 ax.set_aspect('equal')
 ax.grid()
 ax.axis('equal')
-ax.set_xlim(-3*AU,3*AU)
-ax.set_ylim(-3*AU,3*AU)
+ax.set_xlim(-5*AU,5*AU)
+ax.set_ylim(-5*AU,5*AU)
 plt.xlabel("X")
 plt.ylabel("Y")
 plt.title("Solar System")
@@ -173,7 +173,7 @@ text_s   = ax.text(sx, sy, "Sun")
 point_s, = ax.plot([sx], [sy], marker="o", markersize=11, color="yellow")
 
 line_p,  = ax.plot([], [], lw=1, color='blue')
-point_p, = ax.plot([px], [py], marker="o", markersize=4, color="blue")
+point_p, = ax.plot([px], [py], marker="o", markersize=5, color="blue")
 text_p   = ax.text(px, py, "Planet")
 
 line_a,  = ax.plot([], [], lw=1, color='red')
