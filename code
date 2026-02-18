@@ -138,23 +138,6 @@ class Moon(Moving_Object):
 
 
 ###visualization of the planet movement
-#Sun initial
-sx=0
-sy=0
-sun = Star("Sun", Ms, sx, sy)
-#Planet initial
-px=AU
-py=0
-planet = Planet_physical_orbit("Earth", sun, Me, px, py, 0, 1000)
-#Alien initial
-ax=3*AU
-ay=0
-alien = Alien("Alien", sun, 1000, ax, ay, 0, 2000)
-#Moon initial
-'''mx=get_location(Planet_physical_orbit)
-my=
-moon = Moon("Moon", planet, 1000, mx, my, 0, 3000)'''
-
 ###Creates the Solar System
 fig, ax = plt.subplots(figsize=(10,10))
 ax.set_aspect('equal')
@@ -175,41 +158,47 @@ point_p, = ax.plot([px], [py], marker="o", markersize=4, color="blue")
 text_p   = ax.text(px, py, "Planet")
 
 line_a,  = ax.plot([], [], lw=1, color='red')
-point_a, = ax.plot([px], [py], marker="o", markersize=4, color="red")
-text_a   = ax.text(px, py, "Alien")
+point_a, = ax.plot([ax], [ay], marker="o", markersize=4, color="red")
+text_a   = ax.text(ax, ay, "Alien")
 
 line_m,  = ax.plot([], [], lw=1, color='grey')
-point_m, = ax.plot([px], [py], marker="o", markersize=4, color="grey")
-text_m   = ax.text(px, py, "Moon")
+point_m, = ax.plot([mx], [my], marker="o", markersize=4, color="grey")
+text_m   = ax.text(mx, my, "Moon")
 
 def init():
     line_p.set_data([], [])
     point_p.set_data([], [])
+
     line_a.set_data([], [])
     point_a.set_data([], [])
+
     line_m.set_data([], [])
     point_m.set_data([], [])
-    return line_p, point_p, line_a, point_a, line_m, point_m, point_s, text_p, text_a, text_m
-
-
-sxdata,sydata = [Moving_Object.x_positions[0]],[Moving_Object.y_positions[0]]                   # sun track
-pxdata,pydata = [Planet_physical_orbit.x_positions],[Planet_physical_orbit.y_positions]                   # earth track
-axdata,aydata = [],[]                # alien track
-mxdata,mydata = [],[]                #moon track
+    return line_p, point_p, line_a, point_a, line_m, point_m, point_s
 
 
 #Animation
 def animate(i):
     dt = day  # seconds per step
-
+    planet_x_new, planet_y_new= planet.get_location(dt)
+    '''alien_x_new, alien_y_new = alien.get_location(dt)
+    moon_x_new, moon_y_new = moon.get_location(dt)'''
     # Update line (orbit trail)
-    line_p.set_data(Moving_Object.x_positions, Moving_Object.y_positions)
-
+    line_p.set_data([planet_x_new], [planet_y_new])
     # Update planet point
-    point_p.set_data(Moving_Object.x_positions[i], Moving_Object.y_positions[i])
-    text_p.set_position(Moving_Object.x_positions[i], Moving_Object.y_positions[i])
+    point_p.set_data(planet_x_new, planet_y_new)
+    text_p.set_position(planet_x_new, planet_y_new)
 
-    return line_p, point_p, point_s, text_p, text_s
+    '''
+    line_a.set_data([alien_x_new], [alien_y_new])
+    point_a.set_data(alien_x_new, alien_y_new)
+    text_a.set_position(alien_x_new, alien_y_new)
+
+    line_m.set_data([moon_x_new], [moon_y_new])
+    point_m.set_data(moon_x_new, moon_y_new)
+    text_m.set_position(moon_x_new, moon_y_new)'''
+
+    return line_p, point_p, line_a, point_a, line_m, point_m, point_s
 anim = animation.FuncAnimation( fig, animate, init_func=init, frames=2000, interval=20, blit=True)
     
 
