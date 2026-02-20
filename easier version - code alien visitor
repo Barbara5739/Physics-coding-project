@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-import math
-import numpy as np
 
 G = 6.67e-11
 Ms = 2.0e30   # mass of sun in kg unit
@@ -8,22 +6,34 @@ position_sun = (0 , 0)
 
 
 class alien_visitor():
-  def __init__(self, name, reference_star, mass, x_initial, y_initial, perihelion_distance, orbital_eccentricity):
-      self.name = name
-      self.reference_star = reference_star
-      self.mass = mass
-      self.x_initial = x_initial
-      self.perihelion_distance = perihelion_distance
-      self.orbital_eccentricity = orbital_eccentricity
+    def __init__(self, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
+    
+      self.mass_a = mass_a
+      self.x_initial_a = x_initial_a
+      self.y_initial_a = y_initial_a
+      self.perihelion_distance = perihelion_distance_a
+      self.orbital_eccentricity = orbital_eccentricity_a
+      
+    def initial_position_alien(self):
+        self.x_initial_a = []
+        self.y_initial_a = []
+# implement this as a vector
 
-#this is unfinished
-  def alien_visitor_orbit(self):
-    a = []
-    b = []
-    for x in range(-50, 50, 1):
-      y = self.orbital_eccentricity*x**2 - self.perihelion_distance
-      a.append(x)
-      b.append(y)
+    def plot_alien_visitor_orbit(self):
+
+        for x in range(-50, 50, 1):
+            y = self.orbital_eccentricity*x**2 - self.perihelion_distance
+            self.x_initial_a.append(x)
+            self.y_initial_a.append(y)
+        
+        fig= plt.figure()
+        axes=fig.add_subplot(111)
+        axes.plot(self.x_initial_a,self.y_initial_a)
+        plt.show()
+
+#test object
+comet = alien_visitor(234, 4, 22, 2, 1.5 )
+comet.plot_alien_visitor_orbit()
 
   
   
