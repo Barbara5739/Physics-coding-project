@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 G = 6.67e-11
 Ms = 2.0e30   # mass of sun in kg unit
 position_sun = (0 , 0)
-
 
 class alien_visitor():
     def __init__(self, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
@@ -17,22 +17,24 @@ class alien_visitor():
     def initial_position_alien(self):
         self.x_initial_a = []
         self.y_initial_a = []
-# implement this as a vector
 
     def plot_alien_visitor_orbit(self):
 
-        for x in range(-50, 50, 1):
+        for x in range(-20, 20, 1):
             y = self.orbital_eccentricity*x**2 - self.perihelion_distance
             self.x_initial_a.append(x)
             self.y_initial_a.append(y)
         
+#can add more stuff to visualization in terms of aesthetics once we get there
         fig= plt.figure()
         axes=fig.add_subplot(111)
         axes.plot(self.x_initial_a,self.y_initial_a)
+        plt.plot(0, 0, 'o', marker = '*', ms = 20, mec = 'yellow', mfc = 'yellow')
         plt.show()
 
+
 #test object
-comet = alien_visitor(234, 4, 22, 2, 1.5 )
+comet = alien_visitor(234, [], [], 30, 1.5 )
 comet.plot_alien_visitor_orbit()
 
   
