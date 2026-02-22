@@ -46,13 +46,11 @@ class Moving_Object(Galaxy): # Class for moving objects in the galaxy like plane
         #  printable definition of the moving object
         return f"Planet: {self.name} mass: {self.mass} orbiting around {self.reference_name}"
     
-
     @abstractmethod
     def get_location(self, time_interval):
         # get current location of the planet. Redefine in the subclass
         pass
     
-     
     def set_reference_Star(self, Star: Star):
         #   set data of reference star, this is the star around which the planets circulate
           self.reference_x, self.reference_y = Star.get_location( )
@@ -60,7 +58,6 @@ class Moving_Object(Galaxy): # Class for moving objects in the galaxy like plane
 
 
   
-
 class Planet_physical_orbit(Moving_Object):
     def get_location(self, time_interval) :
         ###Physical function for orbit
@@ -81,9 +78,8 @@ class Planet_physical_orbit(Moving_Object):
          # Store the y postion in a list
         self.y_positions.append(self.y.real)
         
-        return self.x,self.y,self.x_positions,self.y_positions
+        return self.x_positions,self.y_positions
     
-
 
 class Object_manager:
     # Class to instantiate the moving objects. 
