@@ -4,7 +4,7 @@ from matplotlib import animation
 import numpy as np
 import math as math
 from abc import ABC, abstractmethod 
-
+from IPython.display import HTML
 
 Ms = 2.0e30   # mass of sun in kg unit
 Me = 5.972e24   # mass of earth in kg unit        
@@ -145,7 +145,8 @@ sun = Star("Sun", Ms, sx, sy)
 #Planet initial
 px=AU
 py=0
-planet = Planet_physical_orbit("Earth", sun, Me, px, py, 0, 1000)
+vp=math.sqrt(G*Ms/AU) # tangential speed for circular orbit
+planet = Planet_physical_orbit("Earth", sun, Me, px, py, 0, vp)
 #Alien initial
 xa=3*AU
 ya=0
@@ -193,21 +194,18 @@ def init():
 
     line_m.set_data([], [])
     point_m.set_data([], [])
-    return line_p, point_p, line_a, point_a, line_m, point_m, point_s
-
-
+    return line_p, point_p, point_s, text_p, text_s
 #Animation
 def animate(i):
     dt = day  # seconds per step
-    planet_x_new, planet_y_new= planet.get_location(dt)
-    '''alien_x_new, alien_y_new = alien.get_location(dt)
-    moon_x_new, moon_y_new = moon.get_location(dt)'''
+    planet.get_location(dt)
+    '''alien.get_location(dt)
+    moon.get_location(dt)'''
     # Update line (orbit trail)
-    line_p.set_data([planet_x_new], [planet_y_new])
-    # Update planet point
-    point_p.set_data(planet_x_new, planet_y_new)
-    text_p.set_position(planet_x_new, planet_y_new)
-
+    line_p.set_data([planet.x_positions], [planet.y_positions])
+    xp_new, yp_new = planet.x_positions[-1], planet.y_positions[-1]
+    point_p.set_data([xp_new], [yp_new])
+    text_p.set_position((xp_new, yp_new))
     '''
     line_a.set_data([alien_x_new], [alien_y_new])
     point_a.set_data(alien_x_new, alien_y_new)
@@ -217,9 +215,7 @@ def animate(i):
     point_m.set_data(moon_x_new, moon_y_new)
     text_m.set_position(moon_x_new, moon_y_new)'''
 
-    return line_p, point_p, point_s
-anim = animation.FuncAnimation( fig, animate, init_func=init, frames=2000, interval=20, blit=True)
-    
+    return line_p, point_p, point_s, text_p, text_s
+anim = animation.FuncAnimation(fig, animate, init_func=init, frames=200, interval=20, blit=False)
 
-
-plt.show()
+HTML(anim.to_jshtml())
