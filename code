@@ -98,7 +98,6 @@ class Object_manager:
     def create_planet_physical_orbit ( name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
          # create Physics calculated orbit by speed mass planet, mass star and G force 
          Planet = Planet_physical_orbit(name, Star, mass, start_x, start_y, start_x_speed , start_y_speed)
-         Planet.set_reference_Star(Star) # set star around which the planet makes it orbit
          return Planet
 
     @staticmethod
