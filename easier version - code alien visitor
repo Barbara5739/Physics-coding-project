@@ -1,5 +1,8 @@
+#animated version
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import numpy as np
+from matplotlib.patches import ConnectionPatch
 
 G = 6.67e-11
 Ms = 2.0e30   # mass of sun in kg unit
@@ -14,7 +17,7 @@ class alien_visitor():
       self.perihelion_distance = perihelion_distance_a
       self.orbital_eccentricity = orbital_eccentricity_a
       
-    def initial_position_alien(self):
+    def define_initial_position_alien(self):
         self.x_initial_a = []
         self.y_initial_a = []
 
@@ -25,37 +28,26 @@ class alien_visitor():
             self.x_initial_a.append(x)
             self.y_initial_a.append(y)
         
-#can add more stuff to visualization in terms of aesthetics once we get there
-        fig= plt.figure()
-        axes=fig.add_subplot(111)
-        axes.plot(self.x_initial_a,self.y_initial_a)
-        plt.plot(0, 0, 'o', marker = '*', ms = 20, mec = 'yellow', mfc = 'yellow')
+#AI version
+        fig, ax = plt.subplots()
+        ax.plot(self.x_initial_a, self.y_initial_a)
+        ax.plot(0, 0, marker='*', markersize=20, color='yellow')
+
+        point, = ax.plot([], [], "ro")
+        def animate(i):
+        
+            point.set_data([self.x_initial_a[i]], [self.y_initial_a[i]])
+            return point,
+
+        self.ani = animation.FuncAnimation(
+            fig,
+            animate,
+            frames=len(self.x_initial_a),
+            interval=50,
+            blit=True
+            )
+
         plt.show()
 
-
-#test object
 comet = alien_visitor(234, [], [], 30, 1.5 )
 comet.plot_alien_visitor_orbit()
-
-#animation
-def animate(i):
-    x = np.linspace(0, i, int(i**2))
-    x, y = i, i**2
-    point.set_data([x], [y])
-    return point
-
-ani = animation.FuncAnimation(
-    fig,
-    animate,
-    interval=25,
-    blit=False,  # blitting can't be used with Figure artists
-    frames=x,
-    repeat_delay=100,
-)
-
-plt.show()
-
-  
-  
-
-  
