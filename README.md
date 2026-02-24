@@ -1,11 +1,6 @@
-# Physics-coding-project (TITLE)
+# Solar sytem visualization
+
+This code allows user to visualize simpified solar sytem that follows both physical and mathematical rules of orbits. A planet, moon and and alien objects are created and their paths are visualised. The trajectory is followed by a green line. 
 
 
-1. Description
-2. licenses ect
-Tasks:
-  1. 3 classes- sun planet and comet(atributes: self, radius velity initial posiution x, y)
-  2. visulization using matplot lib
-  3. magic methods- what are those 
-  4. reading data from the file (someone make a dictionary or table that we will write from)-barbara
 
