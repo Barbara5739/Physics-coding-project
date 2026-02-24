@@ -8,7 +8,6 @@ from IPython.display import HTML
 
 Ms = 2.0e30   # mass of sun in kg unit
 Me = 5.972e24   # mass of earth in kg unit        
-G = 6.67e-11
 day= 24*3600
 AU = 1.5e11 # earth sun distance
 
@@ -30,7 +29,7 @@ class Star(Galaxy):        # returns the value's of the star(s) in the galaxy sy
         # get star's mass
         return self.mass
 
-class Moving_Object(Galaxy): # Class for moving objects in the galaxy like planets, komets, ufo's etc
+class Moving_Object(Galaxy): # Class for moving objects in the galaxy like planets, comets, ufo's etc
     def __init__ (self, name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
         super().__init__(name, mass,start_x,start_y)
         #  set moving object own attributes
