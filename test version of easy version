@@ -1,0 +1,53 @@
+#animated version
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import numpy as np
+from matplotlib.patches import ConnectionPatch
+
+G = 6.67e-11
+Ms = 2.0e30   # mass of sun in kg unit
+position_sun = (0 , 0)
+
+class alien_visitor():
+    def __init__(self, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
+    
+      self.mass_a = mass_a
+      self.x_initial_a = x_initial_a
+      self.y_initial_a = y_initial_a
+      self.perihelion_distance = perihelion_distance_a
+      self.orbital_eccentricity = orbital_eccentricity_a
+      
+    def define_initial_position_alien(self):
+        self.x_initial_a = []
+        self.y_initial_a = []
+
+    def plot_alien_visitor_orbit(self):
+
+        for x in range(-20, 20, 1):
+            y = self.orbital_eccentricity*x**2 - self.perihelion_distance
+            self.x_initial_a.append(x)
+            self.y_initial_a.append(y)
+        
+#AI version
+        fig, ax = plt.subplots()
+        ax.plot(self.x_initial_a, self.y_initial_a)
+        ax.plot(0, 0, marker='*', markersize=20, color='yellow')
+
+        point, = ax.plot([], [], "ro")
+        def animate(i):
+        
+            point.set_data(self.x_initial_a[i], self.y_initial_a[i])
+            return point,
+
+        self.ani = animation.FuncAnimation(
+            fig,
+            animate,
+            frames=len(self.x_initial_a),
+            interval=50,
+            blit=True
+            )
+
+        plt.show()
+
+comet = alien_visitor(234, [], [], 30, 1.5 )
+comet.plot_alien_visitor_orbit()
