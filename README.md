@@ -50,7 +50,7 @@ Maxine
 Nika
 
 ## Contact:
-[OUR UNIVERSITY EMALIRS?]
+[OUR UNIVERSITY EMAILS?]
 
 
   
