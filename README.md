@@ -38,11 +38,19 @@ Description
 
 ## Authors:
 Csenge Barbara Andody-Tanczos
+
 Aaliyah Leurs
-Joep 
+
+Joep
+
 Maya
+
 Maxine
+
 Nika
+
+## Contact:
+[OUR UNIVERSITY EMALIRS?]
 
 
   
