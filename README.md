@@ -28,6 +28,13 @@ To run this code, you will need:
 - numpy
 - Matplotlib
 
+### Setup:
+???
+
+## Usage example:
+[PICTURE OF THE CODE]
+[GIF SHOWING WHAT IT DOES]
+
 
   
 
