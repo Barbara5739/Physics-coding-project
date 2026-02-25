@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -140,22 +139,28 @@ class alien_visitor():
             self.y_positions.append(y)
     
 
-#Seting up the objects
+#Seting up the objects(This part has to be read from another file?)
 #Sun initial
 sx=0
 sy=0
 sun = Star("Sun", Ms, sx, sy)
-#Planet initial
+#Planet1 initial
 px=AU
 py=0
 vp=math.sqrt(G*Ms/AU) # tangential speed for circular orbit
 planet = Planet_physical_orbit("Earth", sun, Me, px, py, 0, vp)
+#Planet2 initial
+px2=1.524*AU
+py2=0
+vm=math.sqrt(G*Ms/px2) # tangential speed for circular orbit
+planet2= Planet_physical_orbit("Mars", sun, 6.39e23, px2, py2, 0, vm)
 #Alien initial
 xa=-3*AU
 ya=3*AU   
 alien = alien_visitor(1000, xa, ya, -2, 1.5 )
 alien.plot_alien_visitor_orbit()
-#Moon initial
+alien._define_initial_position_alien()
+
 
 ###visualization of the planet movement
 ###Creates the Solar System
@@ -169,19 +174,21 @@ plt.xlabel("X")
 plt.ylabel("Y")
 plt.title("Solar System")
 
-#initial of the objects
+#initial conditions of the objects
 text_s   = ax.text(sx, sy, "Sun")
 point_s, = ax.plot([sx], [sy], marker="o", markersize=11, color="yellow")
 
-line_p,  = ax.plot([], [], lw=1, color='blue')
+line_p,  = ax.plot([], [], lw=1, color='green')
 point_p, = ax.plot([px], [py], marker="o", markersize=5, color="blue")
 text_p   = ax.text(px, py, "Planet")
 
-line_a,  = ax.plot([], [], lw=1, color='red')
+line_a,  = ax.plot([], [], lw=1, color='green')
 point_a, = ax.plot([xa], [ya], marker="o", markersize=4, color="red")
 text_a   = ax.text(xa, ya, "Alien")
 
-    
+line_p2,  = ax.plot([], [], lw=1, color='green')
+point_p2, = ax.plot([px2], [py2], marker="o", markersize=4, color="orange")
+text_p2   = ax.text(px2, py2, "Mars")    
 
 def init():
     line_p.set_data([], [])
@@ -190,29 +197,35 @@ def init():
     line_a.set_data([], [])
     point_a.set_data([], [])
 
-    return line_p, point_p, point_s, text_p, text_s, point_a, text_a
+    line_p2.set_data([], [])
+    point_p2.set_data([], [])        
+    return line_p, point_p, point_s, text_p, text_s, point_a, text_a, point_p2, text_p2
 
-
-alien._define_initial_position_alien()
-alien.plot_alien_visitor_orbit()
 
 #Animation
 def animate(i):
     dt = day  # seconds per step
     planet.get_location(dt)
-    
-    # Update line (orbit trail)
+    planet2.get_location(dt)
+    # Animation for planet 
     line_p.set_data(planet.x_positions, planet.y_positions)
     xp_new, yp_new = planet.x_positions[-1], planet.y_positions[-1]
     point_p.set_data([xp_new], [yp_new])
     text_p.set_position((xp_new, yp_new))
-    
+    #Animation for mars
+    line_p2.set_data(planet2.x_positions, planet2.y_positions)
+    xm_new, ym_new = planet2.x_positions[-1], planet2.y_positions[-1]
+    point_p2.set_data([xm_new], [ym_new])
+    text_p2.set_position((xm_new, ym_new))
+    #Animation for alien
     xa_new, ya_new = alien.x_positions[i], alien.y_positions[i]
     line_a.set_data(alien.x_positions[:i+1], alien.y_positions[:i+1])
     point_a.set_data([xa_new], [ya_new])
     text_a.set_position((xa_new, ya_new))
     
-    return line_p, point_p, point_s, text_p, text_s, point_a, text_a, point_a, line_a
-anim = animation.FuncAnimation(fig, animate, init_func=init,frames=365, interval=50, blit=False)
 
-HTML(anim.to_jshtml())
+    return line_p, point_p, point_s, text_p, text_s, point_a, text_a, line_p2, point_p2, text_p2
+anim = animation.FuncAnimation(fig, animate, init_func=init,frames=400, interval=50, blit=False)
+
+
+plt.show()
