@@ -49,6 +49,12 @@ Maxine
 
 Nika
 
+## Sources:
+Parts of this code were created using ideas from the following sources:
+- Movement of the 'alien': https://matplotlib.org/stable/gallery/animation/multiple_axes.html
+- 
+
+
 ## Contact:
 [OUR UNIVERSITY EMAILS?]
 
