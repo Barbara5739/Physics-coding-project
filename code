@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -9,6 +10,7 @@ from IPython.display import HTML
 Ms = 2.0e30   # mass of sun in kg unit
 Me = 5.972e24   # mass of earth in kg unit        
 day= 24*3600
+G = 6.6743*10**-11
 AU = 1.5e11 # earth sun distance
 
 class Galaxy:             # The upper most class of the galaxy system
@@ -112,41 +114,30 @@ class Object_manager:
 class alien_visitor():
     def __init__(self, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
     
-      self.mass_a = mass_a
-      self.x_initial_a = x_initial_a
-      self.y_initial_a = y_initial_a
-      self.perihelion_distance = perihelion_distance_a
-      self.orbital_eccentricity = orbital_eccentricity_a
+      
+        self.mass_a = mass_a
+        # single starting position
+        self.x0 = x_initial_a
+        self.y0 = y_initial_a
+        # orbit lists
+        self.x_positions = []
+        self.y_positions = []
+        self.perihelion_distance = perihelion_distance_a
+        self.orbital_eccentricity = orbital_eccentricity_a
 
-    def define_initial_position_alien(self):  
+    def _define_initial_position_alien(self):  
         self.x_initial_a = []
         self.y_initial_a = []
-
+        return self.x_initial_a, self.y_initial_a
     def plot_alien_visitor_orbit(self):
 
-        for x in range(-20, 20, 1):
-            y = self.orbital_eccentricity*x**2 - self.perihelion_distance
-            self.x_initial_a.append(x)
-            self.y_initial_a.append(y)
-        
-        '''fig, ax = plt.subplots()
-        ax.plot(self.x_initial_a, self.y_initial_a)
-        
+        self.x_positions = []
+        self.y_positions = []
 
-        point_a, = ax.plot([], [], "ro")
-        def animate(i):
-        
-            point_a.set_data([self.x_initial_a[i]], [self.y_initial_a[i]])
-            return point_a,
-        self.ani = animation.FuncAnimation(
-            fig,
-            animate,
-            frames=len(self.x_initial_a),
-            interval=50,
-            blit=True
-            )
-
-        plt.show()'''
+        for x in np.linspace(-3*AU, 3*AU, 400):
+            y = self.orbital_eccentricity * (x / AU)**2 * AU - self.perihelion_distance * AU
+            self.x_positions.append(x)
+            self.y_positions.append(y)
     
 
 #Seting up the objects
@@ -163,12 +154,12 @@ planet = Planet_physical_orbit("Earth", sun, Me, px, py, 0, vp)
 xa=-3*AU
 ya=3*AU   
 alien = alien_visitor(1000, xa, ya, -2, 1.5 )
-#alien.plot_alien_visitor_orbit()
+alien.plot_alien_visitor_orbit()
 #Moon initial
 
 ###visualization of the planet movement
 ###Creates the Solar System
-fig, ax = plt.subplots(figsize=(8,8))
+fig, ax = plt.subplots(figsize=(6,6))
 ax.set_aspect('equal')
 ax.grid()
 ax.axis('equal')
@@ -200,23 +191,28 @@ def init():
     point_a.set_data([], [])
 
     return line_p, point_p, point_s, text_p, text_s, point_a, text_a
+
+
+alien._define_initial_position_alien()
+alien.plot_alien_visitor_orbit()
+
 #Animation
 def animate(i):
     dt = day  # seconds per step
     planet.get_location(dt)
-    alien.define_initial_position_alien(dt)
+    
     # Update line (orbit trail)
-    line_p.set_data([planet.x_positions], [planet.y_positions])
+    line_p.set_data(planet.x_positions, planet.y_positions)
     xp_new, yp_new = planet.x_positions[-1], planet.y_positions[-1]
     point_p.set_data([xp_new], [yp_new])
     text_p.set_position((xp_new, yp_new))
     
-    xa_new, ya_new = alien.x_initial_a[i], alien.y_initial_a[i]
-    line_a.set_data(alien.x_initial_a[:i+1], alien.y_initial_a[:i+1])
+    xa_new, ya_new = alien.x_positions[i], alien.y_positions[i]
+    line_a.set_data(alien.x_positions[:i+1], alien.y_positions[:i+1])
     point_a.set_data([xa_new], [ya_new])
     text_a.set_position((xa_new, ya_new))
-
+    
     return line_p, point_p, point_s, text_p, text_s, point_a, text_a, point_a, line_a
-anim = animation.FuncAnimation(fig, animate, init_func=init,frames=len(alien.x_initial_a), interval=50, blit=False)
+anim = animation.FuncAnimation(fig, animate, init_func=init,frames=365, interval=50, blit=False)
 
 HTML(anim.to_jshtml())
