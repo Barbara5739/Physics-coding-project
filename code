@@ -134,7 +134,7 @@ class alien_visitor():
         self.y_positions = []
 
         for x in np.linspace(-3*AU, 3*AU, 400):
-            y = self.orbital_eccentricity * (x / AU)**2 * AU - self.perihelion_distance * AU
+            y = self.orbital_eccentricity * (x / AU)**2 * AU - self.perihelion_distance * AU - 3 * AU
             self.x_positions.append(x)
             self.y_positions.append(y)
     
