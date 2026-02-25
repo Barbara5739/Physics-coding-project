@@ -32,8 +32,17 @@ To run this code, you will need:
 ???
 
 ## Usage example:
+Description
 [PICTURE OF THE CODE]
 [GIF SHOWING WHAT IT DOES]
+
+## Authors:
+Csenge Barbara Andody-Tanczos
+Aaliyah Leurs
+Joep 
+Maya
+Maxine
+Nika
 
 
   
