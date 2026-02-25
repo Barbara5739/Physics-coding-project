@@ -117,8 +117,8 @@ class alien_visitor():
       self.y_initial_a = y_initial_a
       self.perihelion_distance = perihelion_distance_a
       self.orbital_eccentricity = orbital_eccentricity_a
-      
-    def define_initial_position_alien(self):
+
+    def define_initial_position_alien(self):  
         self.x_initial_a = []
         self.y_initial_a = []
 
@@ -129,16 +129,15 @@ class alien_visitor():
             self.x_initial_a.append(x)
             self.y_initial_a.append(y)
         
-        fig, ax = plt.subplots()
+        '''fig, ax = plt.subplots()
         ax.plot(self.x_initial_a, self.y_initial_a)
-        ax.plot(0, 0, marker='*', markersize=20, color='yellow')
+        
 
-        point, = ax.plot([], [], "ro")
+        point_a, = ax.plot([], [], "ro")
         def animate(i):
         
-            point.set_data([self.x_initial_a[i]], [self.y_initial_a[i]])
-            return point,
-
+            point_a.set_data([self.x_initial_a[i]], [self.y_initial_a[i]])
+            return point_a,
         self.ani = animation.FuncAnimation(
             fig,
             animate,
@@ -147,18 +146,8 @@ class alien_visitor():
             blit=True
             )
 
-        plt.show()
+        plt.show()'''
     
-class Moon(Moving_Object):
-    # def __init__(self, Planet: Planet, mass, x, y, vx, vy):
-        # self.mass = mass
-        # self.x = x
-        # self.y = y
-        # self.vx = vx
-        # self.vy = vy
-      def get_location(self, time_interval):
-          return super().get_location(time_interval)
-
 
 #Seting up the objects
 #Sun initial
@@ -171,17 +160,15 @@ py=0
 vp=math.sqrt(G*Ms/AU) # tangential speed for circular orbit
 planet = Planet_physical_orbit("Earth", sun, Me, px, py, 0, vp)
 #Alien initial
-comet = alien_visitor(234, [], [], 30, 1.5 )
-comet.plot_alien_visitor_orbit()
+xa=-3*AU
+ya=3*AU   
+alien = alien_visitor(1000, xa, ya, -2, 1.5 )
+#alien.plot_alien_visitor_orbit()
 #Moon initial
-mx=2*AU
-my=0
-moon = Moon("Moon", planet, 1000, mx, my, 0)
-
 
 ###visualization of the planet movement
 ###Creates the Solar System
-fig, ax = plt.subplots(figsize=(10,10))
+fig, ax = plt.subplots(figsize=(8,8))
 ax.set_aspect('equal')
 ax.grid()
 ax.axis('equal')
@@ -203,9 +190,7 @@ line_a,  = ax.plot([], [], lw=1, color='red')
 point_a, = ax.plot([xa], [ya], marker="o", markersize=4, color="red")
 text_a   = ax.text(xa, ya, "Alien")
 
-line_m,  = ax.plot([], [], lw=1, color='grey')
-point_m, = ax.plot([mx], [my], marker="o", markersize=4, color="grey")
-text_m   = ax.text(mx, my, "Moon")
+    
 
 def init():
     line_p.set_data([], [])
@@ -214,30 +199,24 @@ def init():
     line_a.set_data([], [])
     point_a.set_data([], [])
 
-    line_m.set_data([], [])
-    point_m.set_data([], [])
-    return line_p, point_p, point_s, text_p, text_s
+    return line_p, point_p, point_s, text_p, text_s, point_a, text_a
 #Animation
 def animate(i):
     dt = day  # seconds per step
     planet.get_location(dt)
-    '''alien.get_location(dt)
-    moon.get_location(dt)'''
+    alien.define_initial_position_alien(dt)
     # Update line (orbit trail)
     line_p.set_data([planet.x_positions], [planet.y_positions])
     xp_new, yp_new = planet.x_positions[-1], planet.y_positions[-1]
     point_p.set_data([xp_new], [yp_new])
     text_p.set_position((xp_new, yp_new))
-    '''
-    line_a.set_data([alien_x_new], [alien_y_new])
-    point_a.set_data(alien_x_new, alien_y_new)
-    text_a.set_position(alien_x_new, alien_y_new)
+    
+    xa_new, ya_new = alien.x_initial_a[i], alien.y_initial_a[i]
+    line_a.set_data(alien.x_initial_a[:i+1], alien.y_initial_a[:i+1])
+    point_a.set_data([xa_new], [ya_new])
+    text_a.set_position((xa_new, ya_new))
 
-    line_m.set_data([moon_x_new], [moon_y_new])
-    point_m.set_data(moon_x_new, moon_y_new)
-    text_m.set_position(moon_x_new, moon_y_new)'''
-
-    return line_p, point_p, point_s, text_p, text_s
-anim = animation.FuncAnimation(fig, animate, init_func=init, frames=200, interval=20, blit=False)
+    return line_p, point_p, point_s, text_p, text_s, point_a, text_a, point_a, line_a
+anim = animation.FuncAnimation(fig, animate, init_func=init,frames=len(alien.x_initial_a), interval=50, blit=False)
 
 HTML(anim.to_jshtml())
