@@ -159,7 +159,7 @@ xa=-3*AU
 ya=3*AU   
 alien = alien_visitor(1000, xa, ya, -2, 1.5 )
 alien.plot_alien_visitor_orbit()
-alien._define_initial_position_alien()
+
 
 
 ###visualization of the planet movement
