@@ -53,7 +53,7 @@ __2. install external packages__
 *a note on example data:*
 The data saved in the file galaxy_objects.csv is a list of possible objects that can be created for this code. If you would like to create your own file, please keep the following information in mind:
 
-__- the column "type":__ this specifies which class is being called (planet, moon, alien, etc.). For the planet class, this can be either CircularPlanet or PhysicsPlanet, which will create a circular orbit or an elliptical orbit, respectively.
+__- the column "type":__ this specifies which class is being called (planet, moon, alien, etc.). For the planet class, this can be either CircularPlanet or PhysicsPlanet, which will create a circular orbit or an elliptical orbit, respectively. For alien there is only one type of trajectory (parabola) called by AllienVisitor.( Moon class is not yet accesible)
 
 __- for objects in the planet class:__ these objects do not have attributes orbital_eccentricity or perihelion_distance. These columns can be left blank
 
