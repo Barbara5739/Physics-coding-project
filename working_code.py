@@ -233,7 +233,7 @@ lines = {}
 def load_data():
     # get planets, aliens, moons
     workdir = Path(__file__).resolve().parent
-    file_path = workdir / "data" / "galaxy_objects.csv"
+    file_path = workdir / "galaxy_objects.csv"
 
     galaxy_objects = pd.read_csv(file_path,  sep=";")
 
@@ -288,7 +288,7 @@ def init():
 
         for key, o in moving_objects.items(): # plotting points for objects ( planets, moons, aliens )
             if type(o) is alien_visitor:
-                marker = 'rv'
+                marker = 'v'
                 markersize = 15
             elif type(o) is  Planet_physical_orbit:
                 marker = 'o'
