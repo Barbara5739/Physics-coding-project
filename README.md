@@ -36,8 +36,10 @@ To run this code, you will need:
 - math
 - annotations from future
 - ABC imported from abc
+- panda
+- sys
 
-### setup
+### Setup
 1. Clone the repository
    git clone https://github.com/Barbara5739/Physics-coding-project
    cd Physics-coding-project
