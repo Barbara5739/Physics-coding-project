@@ -140,14 +140,16 @@ class alien_visitor():
     
 
 #Seting up the objects(This part has to be read from another file?)
+Solar = pd.read_excel('Solar.xlsx')
 #Sun initial
-sx=0
-sy=0
+sx = Solar.iloc[0, 2]
+sy= Solar.iloc[0, 3]
+vs = Solar.iloc[0,4]
 sun = Star("Sun", Ms, sx, sy)
-#Planet1 initial
-px=AU
-py=0
-vp=math.sqrt(G*Ms/AU) # tangential speed for circular orbit
+#Planet initial
+px=Solar.iloc[1,2]
+py=Solar.iloc[1,3]
+vp=Solar.iloc[1,4] # tangential speed for circular orbit
 planet = Planet_physical_orbit("Earth", sun, Me, px, py, 0, vp)
 #Planet2 initial
 px2=1.524*AU
@@ -155,8 +157,8 @@ py2=0
 vm=math.sqrt(G*Ms/px2) # tangential speed for circular orbit
 planet2= Planet_physical_orbit("Mars", sun, 6.39e23, px2, py2, 0, vm)
 #Alien initial
-xa=-3*AU
-ya=3*AU   
+xa=Solar.iloc[4,2]
+ya=Solar.iloc[4,3]
 alien = alien_visitor(1000, xa, ya, -2, 1.5 )
 alien.plot_alien_visitor_orbit()
 
