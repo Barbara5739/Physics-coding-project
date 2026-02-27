@@ -72,6 +72,7 @@ Nika Szafrańska
 Parts of this code were created using ideas from the following sources:
 - Movement of the 'alien': https://matplotlib.org/stable/gallery/animation/multiple_axes.html
 - Reference for plot of parabolic orbit: https://stackoverflow.com/questions/30553585/graphing-a-parabola-using-matplotlib-in-python
+- Visualisation of objects: https://towardsdatascience.com/simulate-a-tiny-solar-system-with-python-fbbb68d8207b/
 
 ## Contact:
 
