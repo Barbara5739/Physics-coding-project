@@ -27,7 +27,7 @@ This object follows a parabolic orbit. It enters the plot, then leaves; it does 
 
 ### Prerequisites
 To run this code, you will need:
-- Python 3.8 or higher
+- Python 3.10 or higher
 - pip (Python package manager)
 - numpy
 - Matplotlib (pyplot and animation imported)
@@ -58,6 +58,8 @@ __- the column "type":__ this specifies which class is being called (planet, moo
 __- for objects in the planet class:__ these objects do not have attributes orbital_eccentricity or perihelion_distance. These columns can be left blank
 
 __- for all CircularPlanet orbits:__ the initial x and y speed is irrelevant. Fill in any number you like!
+
+__- potential issue with the csv file:__ If you make a new excel file, depending on your excel system language, the code will not interpret a "," to separate decimal places correctly. If your excel automatically reverts to using commas, open the document as a .txt file and manually change "," to "." and it should work.
    
 ## Usage example:
 This image shows a star system simulation created by this code. It has planets, a star, and two aliens. The one in the top of the picture is ET! :))
