@@ -11,16 +11,16 @@ Anyone interested in coding plots that move, or interested in visualizing variou
 
 ## Features
 
-class sun: 
+__class sun:__ 
 An object representing the star (the centre of the entire system). It is stationary, and it should always be plotted to aid visualization, as some of the orbits are calculated in a purely mathematical manner and will behave as if the star were there.
 
-class planet:
+__class planet:__
 Object(s) orbiting the sun on elliptical orbits. These orbits are based on physical formulas for the position of an object during an elliptical orbit. Experiment with the code: can you plot more than one planet? Two planets on the same orbit (like Earth and Theia)? Orbits with various radii?
 
-class moon:
+__class moon:__
 Moons have a circular orbit, and orbit a reference planet rather than a reference sun. Plotting them requires plotting at least one planet.
 
-class alien:
+__class alien:__
 This object follows a parabolic orbit. It enters the plot, then leaves; it does not stay in the simulated star system. This could represent an asteroid, a comet or even a green extraterrestrial looking around! The parabolic orbit is calculated using mathematical rather than physical formulas to limit complexity of the code, but the parabola mimics a true parabolic orbit using the orbital eccentricity and perihelion distance.
 
 ## Installation and Setup
@@ -53,15 +53,13 @@ __2. install external packages__
 *a note on example data:*
 The data saved in the file galaxy_objects.csv is a list of possible objects that can be created for this code. If you would like to create your own file, please keep the following information in mind:
 
- - the column "type": this specifies which class is being called (planet, moon, alien, etc.). For the planet class, this can be either CircularPlanet or PhysicsPlanet, which will create a circular orbit or an elliptical orbit, respectively.
- - for objects in the planet class: these objects do not have attributes orbital_eccentricity or perihelion_distance. These columns can be left blank
- - for all CircularPlanet orbits: the initial x and y speed is irrelevant. Fill in any number you like!
+__- the column "type":__ this specifies which class is being called (planet, moon, alien, etc.). For the planet class, this can be either CircularPlanet or PhysicsPlanet, which will create a circular orbit or an elliptical orbit, respectively.
+__- for objects in the planet class:__ these objects do not have attributes orbital_eccentricity or perihelion_distance. These columns can be left blank
+__- for all CircularPlanet orbits:__ the initial x and y speed is irrelevant. Fill in any number you like!
    
 ## Usage example:
 Description
 <img width="1254" height="948" alt="image" src="https://github.com/user-attachments/assets/2ac61e6c-651e-480c-a577-a7c0ff16a165" />
-
-[GIF SHOWING WHAT IT DOES]
 
 ## Authors:
 Csenge Barbara Andody-Tanczos
