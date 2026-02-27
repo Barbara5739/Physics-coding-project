@@ -33,7 +33,9 @@ To run this code, you will need:
 
 ## Usage example:
 Description
-[PICTURE OF THE CODE]
+[PICTURE OF THE CODE]<img width="1254" height="948" alt="image" src="https://github.com/user-attachments/assets/8976c390-544e-4e13-a274-65513cc971e9" />
+
+
 [GIF SHOWING WHAT IT DOES]
 
 ## Authors:
