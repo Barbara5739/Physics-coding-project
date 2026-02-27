@@ -8,6 +8,7 @@ G = 6.67e-11
 Ms = 2.0e30   # mass of sun in kg unit
 position_sun = (0 , 0)
 
+#initialize class
 class alien_visitor():
     def __init__(self, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
     
@@ -16,11 +17,13 @@ class alien_visitor():
       self.y_initial_a = y_initial_a
       self.perihelion_distance = perihelion_distance_a
       self.orbital_eccentricity = orbital_eccentricity_a
-      
+
+ #set initial position     
     def define_initial_position_alien(self):
         self.x_initial_a = []
         self.y_initial_a = []
 
+#creates parabola graph
     def plot_alien_visitor_orbit(self):
 
         for x in range(-20, 20, 1):
@@ -28,7 +31,7 @@ class alien_visitor():
             self.x_initial_a.append(x)
             self.y_initial_a.append(y)
         
-#AI version
+#Animates point on parabola
         fig, ax = plt.subplots()
         ax.plot(self.x_initial_a, self.y_initial_a)
         ax.plot(0, 0, marker='*', markersize=20, color='yellow')
