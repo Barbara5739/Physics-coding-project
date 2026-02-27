@@ -1,27 +1,35 @@
 import math
+class Moon_physical_orbit(Moving_Object):
+    def _init_(self, name, Planet: Moving_Object, mass,
+                 orbital_radius, orbital_period, start_angle=0):
 
-# defined random variables for the thing to not give errors, will adjust based on variables from other sections
-r_planet = 1
-phi_planet = 1
-planet_position = (r_planet,phi_planet)
+        start_x = Planet.x + orbital_radius * math.cos(start_angle)
+        start_y = Planet.y + orbital_radius * math.sin(start_angle)
 
-class moon:
-    def __init__(self, name, corresponding_planet, radius, initial_position):
-        self.name = name
-        self.corresponding_planet = corresponding_planet
-        self.radius = radius
-        self.initial_position = initial_position
+        v_circ = (2 * math.pi * orbital_radius) / orbital_period
+        vx = -v_circ * math.sin(start_angle)
+        vy = v_circ * math.cos(start_angle)
 
+        super()._init_(name, Planet, mass, start_x, start_y, vx, vy)
+
+        self.planet_ref = Planet
+        self.orbital_radius = orbital_radius
         self.orbital_period = orbital_period
 
-        self.angular_velocity = (2* math.pi)/ self.orbital_period
-    
-    def set_starting_point(self): #check math on this
-        x_moon_starting_point = x_planet - self.radius_x
-        y_moon_starting_point = y_planet - self.radius_y
+    def get_location(self, time_interval):
+        r = math.sqrt((self.x - self.planet_ref.x)**2 +
+                      (self.y - self.planet_ref.y)**2)
 
-    def update_position(self):
-        return planet_position - self.orbital_radius
+        Fg = Galaxy.G * (self.planet_ref.mass * self.mass) / r**2
 
-    def plot_position(self):
-        #figure this out with data visualization
+        ax = -Fg * (self.x - self.planet_ref.x) / r / self.mass
+        self.vx += ax * time_interval
+        self.x += self.vx * time_interval
+        self.x_positions.append(self.x)
+
+        ay = -Fg * (self.y - self.planet_ref.y) / r / self.mass
+        self.vy += ay * time_interval
+        self.y += self.vy * time_interval
+        self.y_positions.append(self.y)
+
+        return self.x_positions, self.y_positions
