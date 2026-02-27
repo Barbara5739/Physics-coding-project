@@ -41,11 +41,15 @@ To run this code, you will need:
 
 ### Setup
 1. Clone the repository
+
    git clone https://github.com/Barbara5739/Physics-coding-project
+
    cd Physics-coding-project
    
-2. install external packages
+3. install external packages
+   
    pip install numpy
+
    pip install matplotlib
 
 ## Usage example:
