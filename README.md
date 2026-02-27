@@ -2,7 +2,7 @@
 
 This code plots a visualization of a star system with various objects.
 
-The code allows users to visualize a simplified star system. Planet, moon and and alien objects are created and their paths are visualized. The motion of the various objects is calculated using both simpler mathematical equations and, in some cases, equations that simulate the forces in a similar way to a real star system. Planets move on a circular orbit around the central star, while moons move on circular orbits around planets. The 'alien' objects represent comets or asteroids that follow parabolic orbits. Anyone interested in coding plots that move, or interested in visualizing various star systems could find this code useful. 
+The code allows users to visualize a simplified star system. Planet, moon and and alien objects are created and their paths are visualized. The motion of the various objects is calculated using simpler mathematical equations and, in some cases, equations that simulate the forces in a similar way to a real star system. Planets move on a circular orbit around the central star, while moons move on circular orbits around planets. The 'alien' objects represent comets or asteroids that follow parabolic orbits. Anyone interested in coding plots that move, or interested in visualizing various star systems could find this code useful. 
 
 
 ## Features
@@ -54,10 +54,14 @@ Parts of this code were created using ideas from the following sources:
 - Movement of the 'alien': https://matplotlib.org/stable/gallery/animation/multiple_axes.html
 - Reference for plot of parabolic orbit: https://stackoverflow.com/questions/30553585/graphing-a-parabola-using-matplotlib-in-python
 
-
-
 ## Contact:
 
+b.andody-tanczos@student.maastrichtuniversity.nl
+a.leurs@student.maastrichtuniversity.nl
+j.drugmand@student.maastrichtuniversity.nl
+m.hauff@student.maastrichtuniversity.nl
+m.sahrian@student.maastrichtuniversity.nl
+n.szafranska@student.maastrichtuniversity.nl
 
 
   
