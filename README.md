@@ -49,7 +49,14 @@ __1. Clone the repository__
 __2. install external packages__
    
    pip install -r requirements.txt
+   
+*a note on example data:*
+The data saved in the file galaxy_objects.csv is a list of possible objects that can be created for this code. If you would like to create your own file, please keep the following information in mind:
 
+ - the column "type": this specifies which class is being called (planet, moon, alien, etc.). For the planet class, this can be either CircularPlanet or PhysicsPlanet, which will create a circular orbit or an elliptical orbit, respectively.
+ - for objects in the planet class: these objects do not have attributes orbital_eccentricity or perihelion_distance. These columns can be left blank
+ - for all CircularPlanet orbits: the initial x and y speed is irrelevant. Fill in any number you like!
+   
 ## Usage example:
 Description
 <img width="1254" height="948" alt="image" src="https://github.com/user-attachments/assets/2ac61e6c-651e-480c-a577-a7c0ff16a165" />
