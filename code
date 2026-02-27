@@ -5,6 +5,7 @@ import numpy as np
 import math as math
 from abc import ABC, abstractmethod 
 from IPython.display import HTML
+import pandas as pd
 
 Ms = 2.0e30   # mass of sun in kg unit
 Me = 5.972e24   # mass of earth in kg unit        
