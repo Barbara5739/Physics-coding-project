@@ -41,22 +41,23 @@ Csenge Barbara Andody-Tanczos
 
 Aaliyah Leurs
 
-Joep
+Joep Drugmand
 
-Maya
+Maya Hauff
 
-Maxine
+Maxine Sahrian
 
-Nika
+Nika Szafrańska
 
 ## Sources:
 Parts of this code were created using ideas from the following sources:
 - Movement of the 'alien': https://matplotlib.org/stable/gallery/animation/multiple_axes.html
-- 
+- Reference for plot of parabolic orbit: https://stackoverflow.com/questions/30553585/graphing-a-parabola-using-matplotlib-in-python
+
 
 
 ## Contact:
-[OUR UNIVERSITY EMAILS?]
+
 
 
   
