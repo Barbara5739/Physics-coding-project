@@ -4,7 +4,7 @@ This code plots a visualization of a star system with various objects.
 
 The code allows users to visualize a simplified star system based on the input of initial conditions. Planet, moon and and alien objects are created and their paths are visualized. Motion of the various objects is calculated either by using mathematical equations or physical equations that calculate the forces in a similar way to a real star system. 
 
-Planets move on a circular (or ellptical) orbit around the central star, while moons move on circular orbits around planets. The 'alien' objects represent comets or asteroids that follow parabolic orbits.
+Planets move on a circular (or elliptical) orbit around the central star, while moons move on circular orbits around planets. The 'alien' objects represent comets or asteroids that follow parabolic orbits.
 
 Anyone interested in coding plots that move, or interested in visualizing various star systems could find this code useful. 
 
@@ -31,26 +31,24 @@ To run this code, you will need:
 - pip (Python package manager)
 - numpy
 - Matplotlib (pyplot and animation imported)
+- pandas
 
---> python packages used in the code include 
+__--> python packages used in the code include__ 
 - math
 - annotations from future
 - ABC imported from abc
-- panda
 - sys
 
 ### Setup
-1. Clone the repository
+__1. Clone the repository__
 
    git clone https://github.com/Barbara5739/Physics-coding-project
 
    cd Physics-coding-project
    
-3. install external packages
+__2. install external packages__
    
-   pip install numpy
-
-   pip install matplotlib
+   pip install -r requirements.txt
 
 ## Usage example:
 Description
