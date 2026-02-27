@@ -60,6 +60,7 @@ __- for objects in the planet class:__ these objects do not have attributes orbi
 __- for all CircularPlanet orbits:__ the initial x and y speed is irrelevant. Fill in any number you like!
 
 __- potential issue with the csv file:__ If you make a new excel file, depending on your excel system language, the code will not interpret a "," to separate decimal places correctly. If your excel automatically reverts to using commas, open the document as a .txt file and manually change "," to "." and it should work.
+
 __- when changing the data:__ change the data in galaxy_objects.csv using Notepad/Notepad++ and not excel so that it stays in the same format as before
    
 ## Usage example:
