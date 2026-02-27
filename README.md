@@ -1,11 +1,4 @@
-# Physics-coding-project (TITLE)
+# Aliens
 
-
-1. Description
-2. licenses ect
-Tasks:
-  1. 3 classes- sun planet and comet(atributes: self, radius velity initial posiution x, y)
-  2. visulization using matplot lib
-  3. magic methods- what are those 
-  4. reading data from the file (someone make a dictionary or table that we will write from)-barbara
+### 'Alien visitor' creates an object that follows a parabolic path. Representing a comet, an asteroid, or actually an alien, it does not stay in the plot.
 
