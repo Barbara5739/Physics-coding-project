@@ -2,34 +2,49 @@
 
 This code plots a visualization of a star system with various objects.
 
-The code allows users to visualize a simplified star system. Planet, moon and and alien objects are created and their paths are visualized. The motion of the various objects is calculated using simpler mathematical equations and, in some cases, equations that simulate the forces in a similar way to a real star system. Planets move on a circular orbit around the central star, while moons move on circular orbits around planets. The 'alien' objects represent comets or asteroids that follow parabolic orbits. Anyone interested in coding plots that move, or interested in visualizing various star systems could find this code useful. 
+The code allows users to visualize a simplified star system based on the input of initial conditions. Planet, moon and and alien objects are created and their paths are visualized. Motion of the various objects is calculated either by using mathematical equations or physical equations that calculate the forces in a similar way to a real star system. 
+
+Planets move on a circular (or ellptical) orbit around the central star, while moons move on circular orbits around planets. The 'alien' objects represent comets or asteroids that follow parabolic orbits.
+
+Anyone interested in coding plots that move, or interested in visualizing various star systems could find this code useful. 
 
 
 ## Features
 
-class -- sun: 
-An object representing the star. It is stationary, and it should always be plotted as some of the orbits are calculated in a purely mathematical manner, and will behave as if the star were there, even if the code is modified to remove it.
+class sun: 
+An object representing the star (the centre of the entire system). It is stationary, and it should always be plotted to aid visualization, as some of the orbits are calculated in a purely mathematical manner and will behave as if the star were there.
 
-class -- planet:
-Object(s) orbiting the sun. The shape of the orbit is circular. Experiment with the code: can you plot more than one planet? Two planets on the same orbit (like Earth and Theia)? Orbits with various radii?
+class planet:
+Object(s) orbiting the sun on elliptical orbits. These orbits are based on physical formulas for the position of an object during an elliptical orbit. Experiment with the code: can you plot more than one planet? Two planets on the same orbit (like Earth and Theia)? Orbits with various radii?
 
-class -- moon:
-Object(s) orbiting planets. They, too, have a circular orbit. Plotting them requires plotting at least one planet.
+class moon:
+Moons have a circular orbit, and orbit a reference planet rather than a reference sun. Plotting them requires plotting at least one planet.
 
-class -- alien:
-This object follows a parabolic orbit. It enters the plot, then leaves; it does not stay in the simulated star system. This could represent an asteroid, a comet or even a green extraterrestrial looking around!
+class alien:
+This object follows a parabolic orbit. It enters the plot, then leaves; it does not stay in the simulated star system. This could represent an asteroid, a comet or even a green extraterrestrial looking around! The parabolic orbit is calculated using mathematical rather than physical formulas to limit complexity of the code, but the parabola mimics a true parabolic orbit using the orbital eccentricity and perihelion distance.
 
-## Installation
+## Installation and Setup
 
-### Prerequisites: 
+### Prerequisites
 To run this code, you will need:
 - Python 3.8 or higher
 - pip (Python package manager)
 - numpy
-- Matplotlib
+- Matplotlib (pyplot and animation imported)
 
-### Setup:
-???
+--> python packages used in the code include 
+- math
+- annotations from future
+- ABC imported from abc
+
+### setup
+1. Clone the repository
+   git clone https://github.com/Barbara5739/Physics-coding-project
+   cd Physics-coding-project
+   
+2. install external packages
+   pip install numpy
+   pip install matplotlib
 
 ## Usage example:
 Description
@@ -62,7 +77,3 @@ j.drugmand@student.maastrichtuniversity.nl
 m.hauff@student.maastrichtuniversity.nl
 m.sahrian@student.maastrichtuniversity.nl
 n.szafranska@student.maastrichtuniversity.nl
-
-
-  
-
