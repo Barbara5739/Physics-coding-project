@@ -52,7 +52,8 @@ __2. install external packages__
 
 ## Usage example:
 Description
-[PICTURE OF THE CODE]
+<img width="1254" height="948" alt="image" src="https://github.com/user-attachments/assets/2ac61e6c-651e-480c-a577-a7c0ff16a165" />
+
 [GIF SHOWING WHAT IT DOES]
 
 ## Authors:
