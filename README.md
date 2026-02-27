@@ -77,8 +77,13 @@ Parts of this code were created using ideas from the following sources:
 ## Contact:
 
 b.andody-tanczos@student.maastrichtuniversity.nl
+
 a.leurs@student.maastrichtuniversity.nl
+
 j.drugmand@student.maastrichtuniversity.nl
+
 m.hauff@student.maastrichtuniversity.nl
+
 m.sahrian@student.maastrichtuniversity.nl
+
 n.szafranska@student.maastrichtuniversity.nl
