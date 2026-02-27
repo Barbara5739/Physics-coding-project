@@ -60,7 +60,7 @@ __- for objects in the planet class:__ these objects do not have attributes orbi
 __- for all CircularPlanet orbits:__ the initial x and y speed is irrelevant. Fill in any number you like!
    
 ## Usage example:
-Description
+This image shows a star system simulation created by this code. It has planets, a star, and two aliens. The one in the top of the picture is ET! :))
 <img width="1254" height="948" alt="image" src="https://github.com/user-attachments/assets/2ac61e6c-651e-480c-a577-a7c0ff16a165" />
 
 ## Authors:
