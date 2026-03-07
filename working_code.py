@@ -229,6 +229,7 @@ stars = {}
 moving_objects= {}
 points = {}
 lines = {}
+texts = {}
 
 def load_data():
     # get planets, aliens, moons
@@ -300,6 +301,8 @@ def init():
             lines[key]= line
             point, = ax.plot([], [], marker, label=o.name, markersize = markersize )
             points[key] = point
+            label = ax.text(0, 0, o.name, fontsize=10, ha='center', va='bottom')
+            texts[key] = label
     ax.legend()  #  legenda only shows labels if they exist
     return points
 
@@ -315,31 +318,10 @@ def animate(i):
         x, y  = O.get_location(time_interval=day) # gets the location of the moving objects according to the galaxy simulator
         points[key].set_data([x],[y]) # sets the plot point for the moving objects
         lines[key].set_data(O.get_loclist()) # draw the line for the moving objects
-        
-    #######  old code
-
-    # dt = day  # seconds per step
-    # planet.get_location(dt)
-    # planet2.get_location(dt)
-    # # Animation for planet 
-    # line_p.set_data(planet.x_positions, planet.y_positions)
-    # xp_new, yp_new = planet.x_positions[-1], planet.y_positions[-1]
-    # point_p.set_data([xp_new], [yp_new])
-    # text_p.set_position((xp_new, yp_new))
-    # #Animation for mars
-    # line_p2.set_data(planet2.x_positions, planet2.y_positions)
-    # xm_new, ym_new = planet2.x_positions[-1], planet2.y_positions[-1]
-    # point_p2.set_data([xm_new], [ym_new])
-    # text_p2.set_position((xm_new, ym_new))
-    # #Animation for alien
-    # xa_new, ya_new = alien.x_positions[i], alien.y_positions[i]
-    # line_a.set_data(alien.x_positions[:i+1], alien.y_positions[:i+1])
-    # point_a.set_data([xa_new], [ya_new])
-    # text_a.set_position((xa_new, ya_new))
-    # return line_p, point_p, point_s, text_p, text_s, point_a, text_a, line_p2, point_p2, text_p2
+        texts[key].set_position((x, y + 0.03 * scale))
 
 
-
+   
 
 ########################## Main program #################################
 #Seting up the objects(This part has to be read from another file?)
