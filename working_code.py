@@ -41,6 +41,8 @@ class Moving_Object(Galaxy): # Class for moving objects in the galaxy like plane
         self.vy = start_y_speed
         self.x_positions = []
         self.y_positions = []
+        self.crashed = False # to check if the planet has crashed into the star
+        self.crash_message = ""
 
     def __str__(self) -> str:
         #  printable definition of the moving object
@@ -58,24 +60,41 @@ class Moving_Object(Galaxy): # Class for moving objects in the galaxy like plane
         #   set data of reference star, this is the star around which the planets circulate
           self.reference_x, self.reference_y = Star.get_location( )
           self.reference_mass = Star.get_mass()
-    def check_crash_into_star(self): # checks if the planet has crashed into the star, if it has, it sets the crash message and returns true
+    def check_crash_into_star(self):
         r = ((self.x - self.reference_x)**2 + (self.y - self.reference_y)**2)**0.5
-        STAR_RADIUS = 6.96e8
-        if r <= STAR_RADIUS:  # Assuming the radius of the star is
-            self.crashed = True
-            self.crash_message = f"{self.name} has crashed into the Sun"
+        STAR_RADIUS = 6.96e8  # approximate Sun radius in meters
+
+        if r <= STAR_RADIUS:
+            if not self.crashed:
+                self.crashed = True
+                self.crash_message = f"{self.name} has crashed into the Sun"
+                # Keep the object fixed at the Sun after crash
+                self.x = self.reference_x
+                self.y = self.reference_y
+                self.x_positions.append(self.x)
+                self.y_positions.append(self.y)
             return True
         return False
 
   
 class Planet_physical_orbit(Moving_Object):
     def get_location(self, time_interval) :
+        
         ###Physical function for orbit
         r = (((self.x-self.reference_x)**2 + (self.y-self.reference_y)**2))**0.5 #distance between the planet and the star
     
-        # if self.x <= 10000 and self.x >= 10000 and self.y <= 10000 and self.y >= 10000:
-        if r <= 10000:  
-            sys.exit(f"{self.name} has crashed into sun")
+        if self.check_crash_into_star():
+            return self.x, self.y
+        if r == 0: #prevent dividing by zero in force calculation
+            self.crashed = True
+            self.crash_message = f"{self.name} has crashed into the Sun"
+            self.x = self.reference_x
+            self.y = self.reference_y
+            return self.x, self.y
+
+        # Check crash before computing force
+        if self.check_crash_into_star():
+            return self.x, self.y
         
         Fg = Galaxy.G*(self.reference_mass*self.mass)/r**2 #gravitational force
         
@@ -93,10 +112,7 @@ class Planet_physical_orbit(Moving_Object):
          # Store the y postion in a list
         self.y_positions.append(self.y.real)
         
-        if self.crashed: # if the planet has already crashed, it will not move anymore and will stay at the position of the crash
-            return self.x, self.y
-        if self.check_crash_into_star():
-            return self.x, self.y
+        
         return self.x, self.y
     
 
@@ -112,12 +128,13 @@ class alien_visitor(Moving_Object):
 #     !!!!!!!!!! Make use of moving objects
     def __init__(self, name, Star, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
         super().__init__(name, Star, mass_a, x_initial_a, y_initial_a) 
-    
         self.day = 0
         self.distance_to = x_initial_a
         self.track = np.linspace(-x_initial_a, x_initial_a, 365)
         self.perihelion_distance = perihelion_distance_a
         self.orbital_eccentricity = orbital_eccentricity_a
+
+
 
 # !!!!!!!  use a redefinition of get_location to calculate the position
 #  and calculate the positions in the outside loop not in the class itself
@@ -277,8 +294,7 @@ def init():
 #Animation
 def animate(i):
     print(i) # checking if animate is done
-    
-    status_text.set_text(status_text.get_text())#setting the text for crash
+    current_status = status_text.get_text()#setting the text for crash
     for key, S in stars.items(): # loops over al stars
         x, y  = S.get_location( ) # gets the location of the star according to the galaxy simulator
         points[key].set_data([x],[y]) # sets the plot point for the stars
@@ -287,15 +303,17 @@ def animate(i):
         points[key].set_data([x],[y]) # sets the plot point for the moving objects
         lines[key].set_data(O.get_loclist()) # draw the line for the moving objects
         texts[key].set_position((x, y + 0.03 * scale))
-        if O.crashed:
-            status_text.set_text("has crashed into the sun")
+        if O.crashed and O.crash_message:
+            current_status = O.crash_message
 
+    status_text.set_text(current_status) #setup current crash message
    
 
 ########################## Main program #################################
 #Seting up the objects(This part has to be read from another file?)
 sun = Star("Sun", Ms, sx, sy)
 stars["Sun"]= sun
+crash_messages = []
 #  load planets etc
 load_data()
 
@@ -312,8 +330,7 @@ plt.xlabel("X")
 plt.ylabel("Y")
 plt.title("Solar System")
 
-
-status_text = ax.text( 0.5, -0.08, "", transform=ax.transAxes, ha="center", va="top",fontsize=12,color="red") #if planet crashed
+status_text = ax.text( 0.5, -0.08, "", transform=ax.transAxes, ha="center", va="top",fontsize=16,color="red") #if planet crashed
 
 # start the animation
 anim = animation.FuncAnimation(fig, animate, init_func=init,frames=400, interval=1, blit=False)
