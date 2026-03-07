@@ -58,7 +58,14 @@ class Moving_Object(Galaxy): # Class for moving objects in the galaxy like plane
         #   set data of reference star, this is the star around which the planets circulate
           self.reference_x, self.reference_y = Star.get_location( )
           self.reference_mass = Star.get_mass()
-
+    def check_crash_into_star(self): # checks if the planet has crashed into the star, if it has, it sets the crash message and returns true
+        r = ((self.x - self.reference_x)**2 + (self.y - self.reference_y)**2)**0.5
+        STAR_RADIUS = 6.96e8
+        if r <= STAR_RADIUS:  # Assuming the radius of the star is
+            self.crashed = True
+            self.crash_message = f"{self.name} has crashed into the Sun"
+            return True
+        return False
 
   
 class Planet_physical_orbit(Moving_Object):
@@ -86,7 +93,10 @@ class Planet_physical_orbit(Moving_Object):
          # Store the y postion in a list
         self.y_positions.append(self.y.real)
         
-        # return self.x_positions,self.y_positions
+        if self.crashed: # if the planet has already crashed, it will not move anymore and will stay at the position of the crash
+            return self.x, self.y
+        if self.check_crash_into_star():
+            return self.x, self.y
         return self.x, self.y
     
 
@@ -102,25 +112,12 @@ class alien_visitor(Moving_Object):
 #     !!!!!!!!!! Make use of moving objects
     def __init__(self, name, Star, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
         super().__init__(name, Star, mass_a, x_initial_a, y_initial_a) 
-    #     self.mass_a = mass_a
-    #     # single starting position
-    #     self.x0 = x_initial_a
-    #     self.y0 = y_initial_a
-    #     # orbit lists
-    #     self.x_positions = []
-    #     self.y_positions = []
-        # x_initial_a = 1.5e11
+    
         self.day = 0
         self.distance_to = x_initial_a
         self.track = np.linspace(-x_initial_a, x_initial_a, 365)
         self.perihelion_distance = perihelion_distance_a
         self.orbital_eccentricity = orbital_eccentricity_a
-
-# !!!!!!!! define method does nothing just two list 
-    # def _define_initial_position_alien(self):  
-    #     self.x_initial_a = []
-    #     self.y_initial_a = []
-    #     return self.x_initial_a, self.y_initial_a
 
 # !!!!!!!  use a redefinition of get_location to calculate the position
 #  and calculate the positions in the outside loop not in the class itself
@@ -185,36 +182,6 @@ class Object_manager:
         vx = np.sin(theta) * vt   # Get x speed
         vy = np.cos(theta)* vt    # Get y speed
         return vx, vy
-
-# class alien_visitor_old():
-#     def __init__(self, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
-    
-      
-#         self.mass_a = mass_a
-#         # single starting position
-#         self.x0 = x_initial_a
-#         self.y0 = y_initial_a
-#         # orbit lists
-#         self.x_positions = []
-#         self.y_positions = []
-#         self.perihelion_distance = perihelion_distance_a
-#         self.orbital_eccentricity = orbital_eccentricity_a
-
-#     def _define_initial_position_alien(self):  
-#         self.x_initial_a = []
-#         self.y_initial_a = []
-#         return self.x_initial_a, self.y_initial_a
-#     def plot_alien_visitor_orbit(self):
-
-#         self.x_positions = []
-#         self.y_positions = []
-
-#         for x in np.linspace(-3*AU, 3*AU, 400):
-#             y = self.orbital_eccentricity * (x / AU)**2 * AU - self.perihelion_distance * AU
-#             self.x_positions.append(x)
-#             self.y_positions.append(y)
-    
-
 
 #  Initialization of some constants:
 #Sun initial
@@ -311,6 +278,7 @@ def init():
 def animate(i):
     print(i) # checking if animate is done
     
+    status_text.set_text(status_text.get_text())#setting the text for crash
     for key, S in stars.items(): # loops over al stars
         x, y  = S.get_location( ) # gets the location of the star according to the galaxy simulator
         points[key].set_data([x],[y]) # sets the plot point for the stars
@@ -319,7 +287,8 @@ def animate(i):
         points[key].set_data([x],[y]) # sets the plot point for the moving objects
         lines[key].set_data(O.get_loclist()) # draw the line for the moving objects
         texts[key].set_position((x, y + 0.03 * scale))
-
+        if O.crashed:
+            status_text.set_text("has crashed into the sun")
 
    
 
@@ -342,6 +311,9 @@ ax.set_ylim(-scale, scale)
 plt.xlabel("X")
 plt.ylabel("Y")
 plt.title("Solar System")
+
+
+status_text = ax.text( 0.5, -0.08, "", transform=ax.transAxes, ha="center", va="top",fontsize=12,color="red") #if planet crashed
 
 # start the animation
 anim = animation.FuncAnimation(fig, animate, init_func=init,frames=400, interval=1, blit=False)
