@@ -1,35 +1,410 @@
-import math
-class Moon_physical_orbit(Moving_Object):
-    def _init_(self, name, Planet: Moving_Object, mass,
-                 orbital_radius, orbital_period, start_angle=0):
+from __future__ import annotations
+from fontTools.unicodedata import name
+import matplotlib.pyplot as plt
+from matplotlib import animation
+import numpy as np
+import math as math
+import pandas as pd
+from abc import ABC, abstractmethod 
+# from galaxy_V2 import Star, Object_manager, Planet_physical_orbit, alien_visitor #, moon
+from pathlib import Path
+import sys
 
-        start_x = Planet.x + orbital_radius * math.cos(start_angle)
-        start_y = Planet.y + orbital_radius * math.sin(start_angle)
 
-        v_circ = (2 * math.pi * orbital_radius) / orbital_period
-        vx = -v_circ * math.sin(start_angle)
-        vy = v_circ * math.cos(start_angle)
+class Galaxy:             # The upper most class of the galaxy system
+    G = 6.6743*10**-11    # G is the universal gravitation constant that will be used througout the simulation, since this number is equal everywhere in the universe / galaxy, it belongs to this class.
+    
+    
+    def __init__(self, name, mass, start_x: float = 0, start_y: float = 0):    # these are propperties that every object "spawned" inside our galaxy has, therefore they are already defined in the galaxy class to avoid repetition of code
+        # super init
+        self.name = name
+        self.mass = mass
+        self.x = start_x
+        self.y = start_y
+        
+class Star(Galaxy):        # returns the value's of the star(s) in the galaxy system to use in plots
+    #  Star class, static object in the galaxy like the sun
+    def get_location(self):
+        # get star's location
+        return self.x, self.y
+    def get_mass(self):
+        # get star's mass
+        return self.mass
 
-        super()._init_(name, Planet, mass, start_x, start_y, vx, vy)
+class Moving_Object(Galaxy): # Class for moving objects in the galaxy like planets, comets, ufo's etc
+    def __init__ (self, name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
+        super().__init__(name, mass,start_x,start_y)
+        #  set moving object own attributes
+        self.reference_x, self.reference_y = Star.get_location()
+        self.reference_mass = Star.get_mass()
+        self.reference_name = Star.name
+        self.vx = start_x_speed
+        self.vy = start_y_speed
+        self.x_positions = []
+        self.y_positions = []
+        self.crashed = False # to check if the planet has crashed into the star
+        self.crash_message = ""
 
-        self.planet_ref = Planet
-        self.orbital_radius = orbital_radius
-        self.orbital_period = orbital_period
+    def __str__(self) -> str:
+        #  printable definition of the moving object
+        return f"Planet: {self.name} mass: {self.mass} orbiting around {self.reference_name}"
+    
+    @abstractmethod
+    def get_location(self, time_interval):
+        # get current location of the planet. Redefine in the subclass
+        pass
+    
+    def get_loclist(self):
+        return self.x_positions, self.y_positions
+
+    def set_reference_Star(self, Star: Star):
+        #   set data of reference star, this is the star around which the planets circulate
+          self.reference_x, self.reference_y = Star.get_location( )
+          self.reference_mass = Star.get_mass()
+    def check_crash_into_star(self):
+        r = ((self.x - self.reference_x)**2 + (self.y - self.reference_y)**2)**0.5
+        STAR_RADIUS = 6.96e8  # approximate Sun radius in meters
+
+        if r <= STAR_RADIUS:
+            if not self.crashed:
+                self.crashed = True
+                self.crash_message = f"{self.name} has crashed into the Sun"
+                # Keep the object fixed at the Sun after crash
+                self.x = self.reference_x
+                self.y = self.reference_y
+                self.x_positions.append(self.x)
+                self.y_positions.append(self.y)
+            return True
+        return False
+ 
+class Planet_physical_orbit(Moving_Object):
+    def get_location(self, time_interval) :
+        
+        ###Physical function for orbit
+        r = (((self.x-self.reference_x)**2 + (self.y-self.reference_y)**2))**0.5 #distance between the planet and the star
+    
+        if self.check_crash_into_star():
+            return self.x, self.y
+        if r == 0: #prevent dividing by zero in force calculation
+            self.crashed = True
+            self.crash_message = f"{self.name} has crashed into the Sun"
+            self.x = self.reference_x
+            self.y = self.reference_y
+            return self.x, self.y
+
+        # Check crash before computing force
+        if self.check_crash_into_star():
+            return self.x, self.y
+        
+        Fg = Galaxy.G*(self.reference_mass*self.mass)/r**2 #gravitational force
+        
+        # Calculate the current x position in time
+        ax = -Fg * (self.x-self.reference_x) / r / self.mass
+        self.vx = self.vx + ax    * time_interval
+        self.x = self.x + self.vx * time_interval
+        # Store the x postion in a list
+        self.x_positions.append(self.x.real)
+
+        # Calculate the current y position in time
+        ay = -Fg * (self.y-self.reference_y) / r / self.mass
+        self.vy = self.vy + ay    * time_interval 
+        self.y = self.y + self.vy * time_interval
+         # Store the y postion in a list
+        self.y_positions.append(self.y.real)
+        
+        
+        return self.x, self.y
+    
+class Moon(Moving_Object):
+
+    def __init__(self, name, Star: Star, Planet: Planet_physical_orbit,
+                 mass, start_x, start_y, start_x_speed=0, start_y_speed=0):
+
+        # first initialize through super — positions will be relative to the star
+        super().__init__(name, Star, mass, start_x, start_y,
+                         start_x_speed, start_y_speed)
+
+        # reference to the planet and its mass
+        self.planet = Planet
+        self.planet_mass = Planet.mass
+
+        # shift initial coordinates of the moon relative to the planet
+        self.x += self.planet.x
+        self.y += self.planet.y
+
+        # add planet's velocity to the initial velocity of the moon
+        self.vx += self.planet.vx
+        self.vy += self.planet.vy
 
     def get_location(self, time_interval):
-        r = math.sqrt((self.x - self.planet_ref.x)**2 +
-                      (self.y - self.planet_ref.y)**2)
 
-        Fg = Galaxy.G * (self.planet_ref.mass * self.mass) / r**2
+        # coordinates of the star
+        star_x, star_y = self.reference_x, self.reference_y
 
-        ax = -Fg * (self.x - self.planet_ref.x) / r / self.mass
+        # coordinates of the planet
+        planet_x, planet_y = self.planet.x, self.planet.y
+
+        # distance moon–star and moon–planet
+        r_star = ((self.x - star_x)**2 + (self.y - star_y)**2)**0.5
+        r_planet = ((self.x - planet_x)**2 + (self.y - planet_y)**2)**0.5
+
+        if r_star == 0 or r_planet == 0:
+            return self.x, self.y
+
+        # gravitational forces
+        F_star = Galaxy.G * (self.reference_mass * self.mass) / r_star**2
+        F_planet = Galaxy.G * (self.planet_mass * self.mass) / r_planet**2
+
+        # acceleration
+        # ax = -F_star * (self.x - star_x)/r_star/self.mass - F_planet * (self.x - planet_x)/r_planet/self.mass
+        # ay = -F_star * (self.y - star_y)/r_star/self.mass - F_planet * (self.y - planet_y)/r_planet/self.mass
+
+        ax = - F_planet * (self.x - planet_x)/r_planet/self.mass
+        ay = - F_planet * (self.y - planet_y)/r_planet/self.mass
+
+
+        # update velocity
         self.vx += ax * time_interval
-        self.x += self.vx * time_interval
-        self.x_positions.append(self.x)
-
-        ay = -Fg * (self.y - self.planet_ref.y) / r / self.mass
         self.vy += ay * time_interval
+
+        # update position
+        self.x += self.vx * time_interval
         self.y += self.vy * time_interval
+
+        # save trajectory
+        self.x_positions.append(self.x)
         self.y_positions.append(self.y)
 
-        return self.x_positions, self.y_positions
+        return self.x, self.y
+
+class alien_visitor(Moving_Object):
+  
+#     !!!!!!!!!! Make use of moving objects
+    def __init__(self, name, Star, mass_a, x_initial_a, y_initial_a, perihelion_distance_a, orbital_eccentricity_a):
+        super().__init__(name, Star, mass_a, x_initial_a, y_initial_a) 
+        self.day = 0
+        self.distance_to = x_initial_a
+        self.track = np.linspace(-x_initial_a, x_initial_a, 365)
+        self.perihelion_distance = perihelion_distance_a
+        self.orbital_eccentricity = orbital_eccentricity_a
+
+
+
+# !!!!!!!  use a redefinition of get_location to calculate the position
+#  and calculate the positions in the outside loop not in the class itself
+    def get_location(self, time_interval) :
+    # def plot_alien_visitor_orbit(self):
+        # self.x_positions = []
+        # self.y_positions = []
+        ds = self.distance_to
+        self.day += time_interval/ (6*3600)
+        if self.day > 364:
+            self.day = 0
+        i = int(self.day)
+        self.x = self.track[i]
+        self.y = self.orbital_eccentricity * (self.x / ds)**2 * ds - self.perihelion_distance * ds
+
+        self.x_positions.append(self.x)
+        self.y_positions.append(self.y)
+        return self.x, self.y
+        # for x in np.linspace(-3*self.x, 3*self.x, 400):
+        #     y = self.orbital_eccentricity * (x / AU)**2 * AU - self.perihelion_distance * AU
+        #     self.x_positions.append(x)
+        #     self.y_positions.append(y)
+
+class Object_manager:
+    # Class to instantiate the moving objects. 
+    @staticmethod
+    def create_planet_circular_orbit(name, Star: Star, mass, start_x: float, start_y: float, d =9):
+          ### Mathematical fuction for orbit
+                
+          r_constant = (((start_x - Star.x)**2 + (start_y -Star.y)**2))**0.5 #distance between the planet and the star
+          #get needed speed to achieve circular orbit with pyshics calculation
+          vx, vy = Object_manager.get_needed_speed( r_constant, start_x, start_y, Star.mass, Star.x, Star.y) 
+          # Create Physical planet for the asked distance to the star
+          Planet = Object_manager.create_planet_physical_orbit(name, Star, mass, start_x, start_y, vx, vy)
+          return Planet
+    
+    @staticmethod
+    def get_needed_speed( radius, x , y, reference_mass, reference_x, reference_y):
+        # Calculate speed for needed radius
+        omega = math.sqrt((Galaxy.G * reference_mass)/radius**3) #calculate angular velocity
+        vt = radius * omega #linear tangential velocity
+        theta = np.degrees(np.arctan2((y - reference_y), (x - reference_x))) # signed angle 
+        vx = np.sin(theta) * vt   # Get x speed
+        vy = np.cos(theta)* vt    # Get y speed
+        return vx, vy
+    
+    @staticmethod
+    def create_planet_physical_orbit ( name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
+         # create Physics calculated orbit by speed mass planet, mass star and G force 
+         Planet = Planet_physical_orbit(name, Star, mass, start_x, start_y, start_x_speed , start_y_speed)
+         return Planet
+   
+    @staticmethod
+    def create_alien_visitor(name, Star: Star, mass, start_x: float, start_y: float, perihelion_distance: float, orbital_eccentricity: float  ):
+         # create Physics calculated orbit by speed mass planet, mass star and G force 
+         Alien = alien_visitor(name, Star, mass, start_x, start_y, perihelion_distance , orbital_eccentricity)
+         return Alien
+
+    @staticmethod
+    def create_moon(name, Star: Star, Planet: Planet_physical_orbit,
+                mass, start_x: float, start_y: float,
+                start_x_speed: float = 0, start_y_speed: float = 0):
+ 
+        moon = Moon(name, Star, Planet, mass, start_x, start_y, start_x_speed, start_y_speed=start_y_speed)
+        return moon
+        
+
+
+#  Initialization of some constants:
+#Sun initial
+Ms = 2.0e30   # mass of sun in kg unit
+sx=0
+sy=0
+day= 6*3600
+scale = 5e11   #scale for the plot"
+
+#  Initialize "working dicts"
+stars = {}
+moving_objects= {}
+points = {}
+lines = {}
+texts = {}
+
+def load_data():
+    # get planets, aliens, moons
+    workdir = Path(__file__).resolve().parent
+    file_path = workdir / "data" / "galaxy_objects.csv"
+
+    galaxy_objects = pd.read_csv(file_path, sep=";")
+
+    for index, row in galaxy_objects.iterrows():
+        orbit_star_name = row["orbiting_star"]
+        try:  # checks if the reference star (sun) object exists
+            orbit_star = stars[orbit_star_name]
+        except KeyError:
+            sys.exit(f"The orbiting star {orbit_star_name} does not exist")
+
+        match row["type"]:  # creates objects based on type set in the input file
+            case "PhysicsPlanet":
+                Mobject = Object_manager.create_planet_physical_orbit(
+                    row["name"],
+                    orbit_star,
+                    float(row["mass"]),
+                    float(row["start_x_position"]),
+                    float(row["start_y_position"]),
+                    float(row["start_x_speed"]),
+                    float(row["start_y_speed"])
+                )
+            case "CircularPlanet":
+                Mobject = Object_manager.create_planet_circular_orbit(
+                    row["name"],
+                    orbit_star,
+                    float(row["mass"]),
+                    float(row["start_x_position"]),
+                    float(row["start_y_position"])
+                )
+            case "AlienVisitor":
+                Mobject = Object_manager.create_alien_visitor(
+                    row["name"],
+                    orbit_star,
+                    float(row["mass"]),
+                    float(row["start_x_position"]),
+                    float(row["start_y_position"]),
+                    float(row["perihelion_distance"]),
+                    float(row["orbital_eccentricity"])
+                )
+            case "Moon":
+                planet_name = row["orbiting_planet"]
+                try:
+                    planet = moving_objects[planet_name]
+                except KeyError:
+                    sys.exit(f"The orbiting planet {planet_name} does not exist")
+
+                Mobject = Object_manager.create_moon(
+                    row["name"],
+                    orbit_star,
+                    planet,
+                    float(row["mass"]),
+                    float(row["start_x_position"]),
+                    float(row["start_y_position"]),
+                    float(row["start_x_speed"]),
+                    float(row["start_y_speed"]),
+                    str(row["orbiting_planet"])
+                )
+
+        # save the created object to the collection (dictionary)
+        moving_objects[row["name"]] = Mobject
+
+def init():
+    print("init")
+    if not points: # check if there are not points already created
+        for key, s in stars.items(): # plotting points for star ( sun )
+            point, = ax.plot([], [], 'y*', label=s.name, markersize=20)
+            points[key] = point
+
+        for key, o in moving_objects.items(): # plotting points for objects ( planets, moons, aliens )
+            if type(o) is alien_visitor:
+                marker = 'v'
+                markersize = 15
+            elif type(o) is  Planet_physical_orbit:
+                marker = 'o'
+                markersize = 9
+            elif type(o) is Moon:
+                 marker = '.'
+                 markersize = 5
+            line, = ax.plot([], [], lw=1, color='green')
+            lines[key]= line
+            point, = ax.plot([], [], marker, label=o.name, markersize = markersize )
+            points[key] = point
+            label = ax.text(0, 0, o.name, fontsize=10, ha='center', va='bottom')
+            texts[key] = label
+    ax.legend()  #  legenda only shows labels if they exist
+    return points
+
+
+#Animation
+def animate(i):
+    print(i) # checking if animate is done
+    current_status = status_text.get_text()#setting the text for crash
+    for key, S in stars.items(): # loops over al stars
+        x, y  = S.get_location( ) # gets the location of the star according to the galaxy simulator
+        points[key].set_data([x],[y]) # sets the plot point for the stars
+    for key, O in moving_objects.items():
+        x, y  = O.get_location(time_interval=day) # gets the location of the moving objects according to the galaxy simulator
+        points[key].set_data([x],[y]) # sets the plot point for the moving objects
+        lines[key].set_data(O.get_loclist()) # draw the line for the moving objects
+        texts[key].set_position((x, y + 0.03 * scale))
+        if O.crashed and O.crash_message:
+            current_status = O.crash_message
+
+    status_text.set_text(current_status) #setup current crash message
+   
+
+########################## Main program #################################
+#Seting up the objects(This part has to be read from another file?)
+sun = Star("Sun", Ms, sx, sy)
+stars["Sun"]= sun
+crash_messages = []
+#  load planets etc
+load_data()
+
+###visualization of the planet movement
+###Creates the Solar System
+fig, ax = plt.subplots(figsize=(10,10))    
+ax.set_aspect('equal')
+ax.grid()
+ax.axis('equal')
+ax.set_xlim(-scale, scale)
+ax.set_ylim(-scale, scale)
+
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.title("Solar System")
+
+status_text = ax.text( 0.5, -0.08, "", transform=ax.transAxes, ha="center", va="top",fontsize=16,color="red") #if planet crashed
+
+# start the animation
+anim = animation.FuncAnimation(fig, animate, init_func=init,frames=400, interval=1, blit=False)
+plt.show() # shows the galaxy system
