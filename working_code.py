@@ -206,7 +206,7 @@ class Object_manager:
 Ms = 2.0e30   # mass of sun in kg unit
 sx=0
 sy=0
-day= 24*3600
+day= 6*3600
 scale = 5e11   #scale for the plot"
 
 #  Initialize "working dicts"
