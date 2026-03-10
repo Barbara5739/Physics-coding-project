@@ -117,31 +117,35 @@ class Planet_physical_orbit(Moving_Object):
         return self.x, self.y
     
     def get_reference_location(self):
-        # get planets location
+        # get planet location
         return self.x, self.y
     def get_reference_mass(self):
-        # get planets mass
+        # get planet mass
         return self.mass
+    def get_reference_speeds(self):
+        # get planet 
+        return self.vx, self.vy
         
     
 class Moon(Moving_Object):
 
-    def __init__(self, name, Star: Star, Planet: Planet_physical_orbit, mass, start_x, start_y, start_x_speed=0, start_y_speed=0):
+    def __init__(self, name, Star: Star, planet: Planet_physical_orbit, mass, start_x, start_y, start_x_speed=0, start_y_speed=0):
 
         # first initialize through super — positions will be relative to the star
         super().__init__(name, Star, mass, start_x, start_y, start_x_speed, start_y_speed)
 
         # reference to the planet and its mass
-        self.planet = Planet_physical_orbit.get_reference_location()
-        self.planet_mass = Planet_physical_orbit.get_reference_mass()
+        self.planet_x, self.planet_y = planet.get_reference_location()
+        self.planet_vx, self.planet_vy = planet.get_reference_speeds()
+        self.planet_mass = planet.get_reference_mass()
 
         # shift initial coordinates of the moon relative to the planet
-        self.x += self.planet.x
-        self.y += self.planet.y
+        self.x += self.planet_x
+        self.y += self.planet_y
 
         # add planet's velocity to the initial velocity of the moon
-        self.vx += self.planet.vx
-        self.vy += self.planet.vy
+        self.vx += self.planet_vx
+        self.vy += self.planet_vy
 
     def get_location(self, time_interval):
 
@@ -149,7 +153,7 @@ class Moon(Moving_Object):
         star_x, star_y = self.reference_x, self.reference_y
 
         # coordinates of the planet
-        planet_x, planet_y = self.planet.x, self.planet.y
+        planet_x, planet_y = self.planet_x, self.planet_y
 
         # distance moon–star and moon–planet
         r_star = ((self.x - star_x)**2 + (self.y - star_y)**2)**0.5
@@ -163,11 +167,8 @@ class Moon(Moving_Object):
         F_planet = Galaxy.G * (self.planet_mass * self.mass) / r_planet**2
 
         # acceleration
-        # ax = -F_star * (self.x - star_x)/r_star/self.mass - F_planet * (self.x - planet_x)/r_planet/self.mass
-        # ay = -F_star * (self.y - star_y)/r_star/self.mass - F_planet * (self.y - planet_y)/r_planet/self.mass
-
-        ax = - F_planet * (self.x - planet_x)/r_planet/self.mass
-        ay = - F_planet * (self.y - planet_y)/r_planet/self.mass
+        ax = -F_star * (self.x - star_x)/r_star/self.mass - F_planet * (self.x - planet_x)/r_planet/self.mass
+        ay = -F_star * (self.y - star_y)/r_star/self.mass - F_planet * (self.y - planet_y)/r_planet/self.mass
 
 
         # update velocity
