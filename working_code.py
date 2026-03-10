@@ -172,6 +172,16 @@ class Object_manager:
           return Planet
     
     @staticmethod
+    def get_needed_speed( radius, x , y, reference_mass, reference_x, reference_y):
+        # Calculate speed for needed radius
+        omega = math.sqrt((Galaxy.G * reference_mass)/radius**3) #calculate angular velocity
+        vt = radius * omega #linear tangential velocity
+        theta = np.degrees(np.arctan2((y - reference_y), (x - reference_x))) # signed angle 
+        vx = np.sin(theta) * vt   # Get x speed
+        vy = np.cos(theta)* vt    # Get y speed
+        return vx, vy
+    
+    @staticmethod
     def create_planet_physical_orbit ( name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
          # create Physics calculated orbit by speed mass planet, mass star and G force 
          Planet = Planet_physical_orbit(name, Star, mass, start_x, start_y, start_x_speed , start_y_speed)
@@ -190,15 +200,6 @@ class Object_manager:
         #  return Moon
         
 
-    @staticmethod
-    def get_needed_speed( radius, x , y, reference_mass, reference_x, reference_y):
-        # Calculate speed for needed radius
-        omega = math.sqrt((Galaxy.G * reference_mass)/radius**3) #calculate angular velocity
-        vt = radius * omega #linear tangential velocity
-        theta = np.degrees(np.arctan2((y - reference_y), (x - reference_x))) # signed angle 
-        vx = np.sin(theta) * vt   # Get x speed
-        vy = np.cos(theta)* vt    # Get y speed
-        return vx, vy
 
 #  Initialization of some constants:
 #Sun initial
