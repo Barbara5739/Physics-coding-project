@@ -139,9 +139,6 @@ class alien_visitor(Moving_Object):
 # !!!!!!!  use a redefinition of get_location to calculate the position
 #  and calculate the positions in the outside loop not in the class itself
     def get_location(self, time_interval) :
-    # def plot_alien_visitor_orbit(self):
-        # self.x_positions = []
-        # self.y_positions = []
         ds = self.distance_to
         self.day += time_interval/ (24*3600)
         if self.day > 364:
@@ -153,10 +150,6 @@ class alien_visitor(Moving_Object):
         self.x_positions.append(self.x)
         self.y_positions.append(self.y)
         return self.x, self.y
-        # for x in np.linspace(-3*self.x, 3*self.x, 400):
-        #     y = self.orbital_eccentricity * (x / AU)**2 * AU - self.perihelion_distance * AU
-        #     self.x_positions.append(x)
-        #     self.y_positions.append(y)
 
 class Object_manager:
     # Class to instantiate the moving objects. 
