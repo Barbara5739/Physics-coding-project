@@ -61,6 +61,7 @@ class Moving_Object(Galaxy): # Class for moving objects in the galaxy like plane
         #   set data of reference star, this is the star around which the planets circulate
           self.reference_x, self.reference_y = Star.get_location( )
           self.reference_mass = Star.get_mass()
+
     def check_crash_into_star(self):
         r = ((self.x - self.reference_x)**2 + (self.y - self.reference_y)**2)**0.5
         STAR_RADIUS = 6.96e8  # approximate Sun radius in meters
@@ -115,18 +116,24 @@ class Planet_physical_orbit(Moving_Object):
         
         return self.x, self.y
     
+    def get_reference_location(self):
+        # get planets location
+        return self.x, self.y
+    def get_reference_mass(self):
+        # get planets mass
+        return self.mass
+        
+    
 class Moon(Moving_Object):
 
-    def __init__(self, name, Star: Star, Planet: Planet_physical_orbit,
-                 mass, start_x, start_y, start_x_speed=0, start_y_speed=0):
+    def __init__(self, name, Star: Star, Planet: Planet_physical_orbit, mass, start_x, start_y, start_x_speed=0, start_y_speed=0):
 
         # first initialize through super — positions will be relative to the star
-        super().__init__(name, Star, mass, start_x, start_y,
-                         start_x_speed, start_y_speed)
+        super().__init__(name, Star, mass, start_x, start_y, start_x_speed, start_y_speed)
 
         # reference to the planet and its mass
-        self.planet = Planet
-        self.planet_mass = Planet.mass
+        self.planet = Planet_physical_orbit.get_reference_location()
+        self.planet_mass = Planet_physical_orbit.get_reference_mass()
 
         # shift initial coordinates of the moon relative to the planet
         self.x += self.planet.x
@@ -248,9 +255,7 @@ class Object_manager:
          return Alien
 
     @staticmethod
-    def create_moon(name, Star: Star, Planet: Planet_physical_orbit,
-                mass, start_x: float, start_y: float,
-                start_x_speed: float = 0, start_y_speed: float = 0):
+    def create_moon(name, Star: Star, Planet: Planet_physical_orbit, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0):
  
         moon = Moon(name, Star, Planet, mass, start_x, start_y, start_x_speed, start_y_speed=start_y_speed)
         return moon
@@ -318,20 +323,19 @@ def load_data():
             case "Moon":
                 planet_name = row["orbiting_planet"]
                 try:
-                    planet = moving_objects[planet_name]
+                    orbit_planet = moving_objects[planet_name]
                 except KeyError:
                     sys.exit(f"The orbiting planet {planet_name} does not exist")
 
                 Mobject = Object_manager.create_moon(
                     row["name"],
                     orbit_star,
-                    planet,
+                    orbit_planet,
                     float(row["mass"]),
                     float(row["start_x_position"]),
                     float(row["start_y_position"]),
                     float(row["start_x_speed"]),
                     float(row["start_y_speed"]),
-                    str(row["orbiting_planet"])
                 )
 
         # save the created object to the collection (dictionary)
