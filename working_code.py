@@ -124,7 +124,8 @@ class Moon:
         self.radius = radius
         self.angle = start_angle
         # orbital angular velocity derived from Newtonian gravity
-        self.angular_speed = math.sqrt(Galaxy.G * Planet.mass / radius**3)
+        self.angular_speed = math.sqrt(Galaxy.G * Planet.mass / radius**3)*8.07
+        # 8.07 - period`s coefficient 
         self.x_positions = []
         self.y_positions = []
         self.crashed = False
