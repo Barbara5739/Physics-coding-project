@@ -207,7 +207,7 @@ class Object_manager:
     def create_moon_circular_orbit(name, Planet: Moving_Object, mass, radius, start_angle=0):
 
         if mass >= Planet.mass:
-            print(f"Warning: Moon {name} heavier than planet {Planet.name}")
+            print(f"Warning: Moon {name} is heavier than planet {Planet.name}")
 
         moon = Moon(name, Planet, mass, radius, start_angle)
         return moon
