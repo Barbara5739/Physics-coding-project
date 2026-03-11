@@ -116,12 +116,29 @@ class Planet_physical_orbit(Moving_Object):
         return self.x, self.y
     
 
-# class moon(Moving_Object):
-#     # def __init__   if neccassary
+class Moon:
+    def __init__(self, name, Planet: Moving_Object, mass, radius, start_angle=0):
+        self.name = name
+        self.planet = Planet
+        self.mass = mass
+        self.radius = radius
+        self.angle = start_angle
+        # orbital angular velocity derived from Newtonian gravity
+        self.angular_speed = math.sqrt(Galaxy.G * Planet.mass / radius**3)
+        self.x_positions = []
+        self.y_positions = []
+        self.crashed = False
 
-#     def get_location(self, time_interval):
-#         # return super().get_location(time_interval)
-#         pass
+    def get_location(self, time_interval):
+        self.angle += self.angular_speed * time_interval
+        self.x = self.planet.x + self.radius * math.cos(self.angle)
+        self.y = self.planet.y + self.radius * math.sin(self.angle)
+        self.x_positions.append(self.x)
+        self.y_positions.append(self.y)
+        return self.x, self.y
+
+    def get_loclist(self):
+        return self.x_positions, self.y_positions
 
 class alien_visitor(Moving_Object):
   
@@ -186,11 +203,14 @@ class Object_manager:
          Alien = alien_visitor(name, Star, mass, start_x, start_y, perihelion_distance , orbital_eccentricity)
          return Alien
 
-    # @staticmethod
-    # def create_moon( name, Star: Star, mass, start_x: float, start_y: float, start_x_speed: float = 0, start_y_speed: float = 0  ):
-        # create Physics calculated orbit by speed mass planet, mass star and G force 
-        #  Moon = Moon(name, Star, mass, start_x, start_y, start_x_speed , start_y_speed)
-        #  return Moon
+    @staticmethod
+    def create_moon_circular_orbit(name, Planet: Moving_Object, mass, radius, start_angle=0):
+
+        if mass >= Planet.mass:
+            print(f"Warning: Moon {name} heavier than planet {Planet.name}")
+
+        moon = Moon(name, Planet, mass, radius, start_angle)
+        return moon
         
 
 
@@ -217,45 +237,78 @@ def load_data():
     galaxy_objects = pd.read_csv(file_path,  sep=";")
 
     for index, row in galaxy_objects.iterrows():
-        orbit_star_name = row["orbiting_star"]  
-        try:                                        # checks if the refrence star ( sun ) object exists
-            orbit_star = stars[orbit_star_name]     #
-        except:
-            sys.exit(f"The orbiting star {orbit_star_name} does not exist") 
-        match row["type"]:              # creates objects based on type set in the input file
+
+        match row["type"]:
+
             case "PhysicsPlanet":
-                Mobject = Object_manager.create_planet_physical_orbit(row["name"], 
-                                                            orbit_star, 
-                                                            float(row["mass"]), 
-                                                            float(row["start_x_position"]),
-                                                            float(row["start_y_position"]),
-                                                            float(row["start_x_speed"]),
-                                                            float(row["start_y_speed"])) 
+                orbit_star_name = row["orbiting_star"]
+                try:
+                    orbit_star = stars[orbit_star_name]
+                except:
+                    sys.exit(f"The orbiting star {orbit_star_name} does not exist")
+
+                Mobject = Object_manager.create_planet_physical_orbit(
+                    row["name"],
+                    orbit_star,
+                    float(row["mass"]),
+                    float(row["start_x_position"]),
+                    float(row["start_y_position"]),
+                    float(row["start_x_speed"]),
+                    float(row["start_y_speed"])
+            )
+                moving_objects[row["name"]] = Mobject
+
             case "CircularPlanet":
-                    Mobject =  Object_manager.create_planet_circular_orbit(row["name"], 
-                                                                orbit_star, 
-                                                                float(row["mass"]), 
-                                                                float(row["start_x_position"]),
-                                                                float(row["start_y_position"]))
+                orbit_star_name = row["orbiting_star"]
+                try:
+                    orbit_star = stars[orbit_star_name]
+                except:
+                    sys.exit(f"The orbiting star {orbit_star_name} does not exist")
+
+                Mobject = Object_manager.create_planet_circular_orbit(
+                    row["name"],
+                    orbit_star,
+                    float(row["mass"]),
+                    float(row["start_x_position"]),
+                    float(row["start_y_position"])
+            )
+                moving_objects[row["name"]] = Mobject
+
             case "AlienVisitor":
-                    Mobject =  Object_manager.create_alien_visitor(row["name"], 
-                                                                orbit_star, 
-                                                                float(row["mass"]), 
-                                                                float(row["start_x_position"]),
-                                                                float(row["start_y_position"]),
-                                                                float(row["perihelion_distance"]),
-                                                                float(row["orbital_eccentricity"])
-                                                                ) 
-            # case "Moon":
-                    # Mobject = Object_manager.create_moon(row["name"], 
-                    #                                      orbit_star, 
-                    #                                      float(row["mass"]), 
-                    #                                      float(row["start_x_position"]),
-                    #                                      float(row["start_y_position"]),
-                    #                                      float(row["start_x_speed"]),
-                    #                                      float(row["start_y_speed"]))
-                                                               
-        moving_objects[row["name"]] = Mobject # saves the created object to the collection ( dictionary ) 
+                orbit_star_name = row["orbiting_star"]
+                try:
+                    orbit_star = stars[orbit_star_name]
+                except:
+                    sys.exit(f"The orbiting star {orbit_star_name} does not exist")
+
+                Mobject = Object_manager.create_alien_visitor(
+                    row["name"],
+                    orbit_star,
+                    float(row["mass"]),
+                    float(row["start_x_position"]),
+                    float(row["start_y_position"]),
+                    float(row["perihelion_distance"]),
+                    float(row["orbital_eccentricity"])
+            )
+                moving_objects[row["name"]] = Mobject
+
+            case "Moon":
+                orbit_planet_name = row["orbiting_star"]
+
+                try:
+                    orbit_planet = moving_objects[orbit_planet_name]
+                except:
+                    sys.exit(f"The orbiting planet {orbit_planet_name} does not exist")
+
+                Mobject = Object_manager.create_moon_circular_orbit(
+                    row["name"],
+                    orbit_planet,
+                    float(row["mass"]),
+                    float(row["start_x_position"]),
+                    float(row["start_y_position"])
+            )
+                moving_objects[row["name"]] = Mobject
+
 
 
 def init():
@@ -272,9 +325,9 @@ def init():
             elif type(o) is  Planet_physical_orbit:
                 marker = 'o'
                 markersize = 9
-            # elif type(o) is moon:
-            #     marker = '.'
-            #     markersize = 5
+            elif type(o) is Moon:
+                 marker = '.'
+                 markersize = 3
             line, = ax.plot([], [], lw=1, color='green')
             lines[key]= line
             point, = ax.plot([], [], marker, label=o.name, markersize = markersize )
