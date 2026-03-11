@@ -1,0 +1,4 @@
+type;name;mass;start_x_position;start_y_position;start_x_speed;start_y_speed;orbiting_star;orbiting_planet;perihelion_distance;orbital_eccentricity
+PhysicsPlanet;Time_Interval_Bug;5.972E24;1.220E11;0;0;10000;Sun;
+PhysicsPlanet;Sun_Collision_Bug;5.972E24;1.440E11;0;0;0;Sun;
+AlienVisitor;Alien_Warp_Bug;1000;1.5E11;;;;Sun; ;2;1.5
