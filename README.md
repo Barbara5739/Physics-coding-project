@@ -18,7 +18,7 @@ __class planet:__
 Object(s) orbiting the sun on elliptical orbits. These orbits are based on physical formulas for the position of an object during an elliptical orbit. Experiment with the code: can you plot more than one planet? Two planets on the same orbit (like Earth and Theia)? Orbits with various radii?
 
 __class moon:__
-Moons have a circular orbit. The orbit references a planet rather than sun and is based on orbital angular velocity derived from Newtonian gravity. Plotting them requires plotting at least one planet. To create a moon enter distance between planet and moon for start_x_position and initial position angle around the planet in radians for start_y_position. The less is radius - the stronger gravitation - the faster moon will rotate. 
+Moons have a circular orbit. The orbit references a planet rather than sun and is based on orbital angular velocity derived from Newtonian gravity. Plotting them requires plotting at least one planet.
 
 __class alien:__
 This object follows a parabolic orbit. It enters the plot, then leaves; it does not stay in the simulated star system. This could represent an asteroid, a comet or even a green extraterrestrial looking around! The parabolic orbit is calculated using mathematical rather than physical formulas to limit complexity of the code, but the parabola mimics a true parabolic orbit using the orbital eccentricity and perihelion distance.
@@ -53,11 +53,13 @@ __2. install external packages__
 *a note on example data:*
 The data saved in the file galaxy_objects.csv is a list of possible objects that can be created for this code. If you would like to create your own file, please keep the following information in mind:
 
-__- the column "type":__ this specifies which class is being called (planet, moon, alien, etc.). For the planet class, this can be either CircularPlanet or PhysicsPlanet, which will create a circular orbit or an elliptical orbit, respectively. For alien there is only one type of trajectory (parabola) called by AllienVisitor.( Moon class is not yet accesible)
+__- the column "type":__ this specifies which class is being called (planet, moon, alien, etc.). For the planet class, this can be either CircularPlanet or PhysicsPlanet, which will create a circular orbit or an elliptical orbit, respectively. For alien there is only one type of trajectory (parabola) called by AllienVisitor. For Moon class there is only circular orbit, but it works with both types of planets. 
 
 __- for objects in the planet class:__ these objects do not have attributes orbital_eccentricity or perihelion_distance. These columns can be left blank
 
 __- for all CircularPlanet orbits:__ the initial x and y speed is irrelevant. Fill in any number you like!
+
+__- for all Moon orbits:__ enter distance (radius) between planet and moon as start_x_position and initial position angle around the planet in radians as start_y_position. If you think that it goes too slow, remember: the less is radius - the stronger gravitation - the faster the moon will rotate!
 
 __- potential issue with the csv file:__ If you make a new excel file, depending on your excel system language, the code will not interpret a "," to separate decimal places correctly. If your excel automatically reverts to using commas, open the document as a .txt file and manually change "," to "." and it should work.
 
