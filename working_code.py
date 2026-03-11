@@ -293,8 +293,7 @@ def load_data():
                 moving_objects[row["name"]] = Mobject
 
             case "Moon":
-                orbit_planet_name = row["orbiting_star"]
-
+                orbit_planet_name = row["orbiting_planet"]
                 try:
                     orbit_planet = moving_objects[orbit_planet_name]
                 except:
@@ -308,8 +307,6 @@ def load_data():
                     float(row["start_y_position"])
             )
                 moving_objects[row["name"]] = Mobject
-
-
 
 def init():
     print("init")
