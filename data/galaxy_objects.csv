@@ -5,3 +5,5 @@ PhysicsPlanet;Mars;0.642E24;0.228E12;0;0;24000;Sun;
 CircularPlanet;Zorg;5.972E30;1.000E11;0;0;0;Sun;
 AlienVisitor;Alien;1000;1.5E11;;;;Sun;2;1.5
 AlienVisitor;ET;1000;1.5E11;;;;Sun;1;10
+Moon;Luna;7.35E22;1.5E9;0;;;Earth;;
+Moon;Peter;7.35E22;5E8;1.57;;;Mars;;
