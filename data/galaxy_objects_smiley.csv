@@ -1,0 +1,5 @@
+type;name;mass;start_x_position;start_y_position;start_x_speed;start_y_speed;orbiting_star;orbiting_planet;perihelion_distance;orbital_eccentricity
+PhysicsPlanet;Right_eye;5.972E24;1.440E11;0.75E11;-5000;10000;Sun;
+PhysicsPlanet;Left_eye;5.972E24;-1.440E11;0.75E11;5000;10000;Sun;
+CircularPlanet;Face;0.642E24;0.3E12;0;0;0;Sun;
+AlienVisitor;Mouth;1000;1.5E11;;;;Sun; ;2;1.5
