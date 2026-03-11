@@ -18,7 +18,7 @@ __class planet:__
 Object(s) orbiting the sun on elliptical orbits. These orbits are based on physical formulas for the position of an object during an elliptical orbit. Experiment with the code: can you plot more than one planet? Two planets on the same orbit (like Earth and Theia)? Orbits with various radii?
 
 __class moon:__
-Moons have a circular orbit, and orbit a reference planet rather than a reference sun. Plotting them requires plotting at least one planet.
+Moons have a circular orbit. The orbit references a planet rather than sun and is based on orbital angular velocity derived from Newtonian gravity. Plotting them requires plotting at least one planet. To create a moon enter distance between planet and moon for start_x_position and initial position angle around the planet in radians for start_y_position. The less is radius - the stronger gravitation - the faster moon will rotate. 
 
 __class alien:__
 This object follows a parabolic orbit. It enters the plot, then leaves; it does not stay in the simulated star system. This could represent an asteroid, a comet or even a green extraterrestrial looking around! The parabolic orbit is calculated using mathematical rather than physical formulas to limit complexity of the code, but the parabola mimics a true parabolic orbit using the orbital eccentricity and perihelion distance.
