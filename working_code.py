@@ -99,14 +99,14 @@ class Planet_physical_orbit(Moving_Object):
         Fg = Galaxy.G*(self.reference_mass*self.mass)/r**2 #gravitational force
         
         # Calculate the current x position in time
-        ax = -Fg * (self.x-self.reference_x) / r / self.mass
+        ax = -Fg * (self.x-self.reference_x) / r / self.mass #<- This line was made by chatgpt because I didn't know how to calculate this at the time of creation
         self.vx = self.vx + ax    * time_interval
         self.x = self.x + self.vx * time_interval
         # Store the x postion in a list
         self.x_positions.append(self.x.real)
 
         # Calculate the current y position in time
-        ay = -Fg * (self.y-self.reference_y) / r / self.mass
+        ay = -Fg * (self.y-self.reference_y) / r / self.mass #<- This line was made by chatgpt because I didn't know how to calculate this at the time of creation
         self.vy = self.vy + ay    * time_interval 
         self.y = self.y + self.vy * time_interval
          # Store the y postion in a list
